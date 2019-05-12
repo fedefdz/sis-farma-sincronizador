@@ -22,6 +22,7 @@ namespace Sisfarma.Sincronizador.Sincronizadores.SuperTypes
         protected virtual void Apagar()
         {
             SincronizadorTaskManager.PowerOff();
+            TaskSincronizador.ClearConfiguracionPredefinida();
             EstaEncendido = false;            
         }
     }

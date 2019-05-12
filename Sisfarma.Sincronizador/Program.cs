@@ -23,7 +23,7 @@ namespace Sisfarma.Sincronizador
         [STAThread]
         private static void Main()
         {
-            if (!AppProcessHelper.SetSingleInstance())
+            if (!Helpers.AppProcessHelper.SetSingleInstance())
             {                
                 Environment.Exit(-1);
             }
@@ -63,7 +63,7 @@ namespace Sisfarma.Sincronizador
             // last change for cleanup code here!
 
             // only restart if user requested, not an unhandled app exception...
-            AppProcessHelper.RestartIfRequired();
+            Helpers.AppProcessHelper.RestartIfRequired();
         }
 
         private static ContextMenuStrip GetSincronizadorMenuStrip()

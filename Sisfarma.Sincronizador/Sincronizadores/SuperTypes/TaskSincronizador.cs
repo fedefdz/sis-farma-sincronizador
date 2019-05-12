@@ -8,6 +8,11 @@ namespace Sisfarma.Sincronizador.Sincronizadores.SuperTypes
 {
     public abstract class TaskSincronizador : BaseSincronizador
     {
+        public static void ClearConfiguracionPredefinida()
+        {
+            _configuracionPredefinida = null;
+        }
+
         protected FarmaticService _farmatic;
 
         protected static ConfiguracionDictionary _configuracionPredefinida;
