@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61F08E5B-C092-4E54-8687-34F5827B54E3}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sisfarma.Sincronizador.Unycop</RootNamespace>
     <AssemblyName>Sisfarma.Sincronizador.Unycop</AssemblyName>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -82,6 +86,10 @@
     <ProjectReference Include="..\Sisfarma.Sincronizador.Infrastructure\Sisfarma.Sincronizador.Infrastructure.csproj">
       <Project>{3308B4C4-2740-49FC-B021-1CA7CA59A4D6}</Project>
       <Name>Sisfarma.Sincronizador.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sisfarma.Sincronizador.Unycop.Domain.Core\Sisfarma.Sincronizador.Unycop.Domain.Core.csproj">
+      <Project>{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}</Project>
+      <Name>Sisfarma.Sincronizador.Unycop.Domain.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

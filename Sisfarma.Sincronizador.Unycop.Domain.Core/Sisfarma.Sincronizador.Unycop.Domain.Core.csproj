@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\FarmaciaFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sincronizadores\CategoriaSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />
@@ -56,6 +57,10 @@
     <ProjectReference Include="..\Sisfarma.Sincronizador.Domain.Entities\Sisfarma.Sincronizador.Domain.Entities.csproj">
       <Project>{E3C4EEFD-3134-458C-8141-15CCDA19300B}</Project>
       <Name>Sisfarma.Sincronizador.Domain.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sisfarma.Sincronizador.Unycop.Infrastructure\Sisfarma.Sincronizador.Unycop.Infrastructure.csproj">
+      <Project>{D21CF482-E9C4-437C-A311-D459730F96D1}</Project>
+      <Name>Sisfarma.Sincronizador.Unycop.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

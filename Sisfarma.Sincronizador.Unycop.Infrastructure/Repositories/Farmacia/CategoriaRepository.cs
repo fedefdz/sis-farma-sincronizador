@@ -20,7 +20,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
     public class CategoriaRepository : FarmaciaRepository, ICategoriaRepository
     {
         public CategoriaRepository(LocalConfig config) : base(config)
-        { }
+        { }        
 
         public Categoria GetOneOrDefaultById(long id)
         {

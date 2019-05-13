@@ -16,6 +16,11 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
                 throw new ArgumentNullException(nameof(config));
 
             return new FarmaciaContext(config.Server, config.Database, config.Username, config.Password);
-        }        
+        }
+
+        public static FarmaciaContext Default()
+        {
+            return new FarmaciaContext(config.Server, config.Database, config.Username, config.Password);
+        }
     }
 }

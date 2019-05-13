@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.Sincronizador", "Sisfarma.Sincronizador\Sisfarma.Sincronizador.csproj", "{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.RestClient", "Sisfarma.RestClient\Sisfarma.RestClient.csproj", "{496093B9-667B-4041-8581-462771FC68FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.ClickOnce", "Sisfarma.ClickOnce\Sisfarma.ClickOnce.csproj", "{92CBB2CC-844F-4B52-9208-87B322BB6DBA}"
@@ -16,8 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClickOnce", "ClickOnce", "{D1152B5E-95F1-48D5-A2B0-033D2BE9272D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unycop", "Unycop", "{3E0F63DB-6306-49AB-B5BD-A9D81A0DCAA1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Farmatic", "Farmatic", "{A38CA74C-DCCE-4FAF-BB65-582D86D3AEBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestClient", "RestClient", "{41764C70-6B77-41D3-B438-82ED44E954F7}"
 EndProject
@@ -41,10 +37,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{496093B9-667B-4041-8581-462771FC68FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{496093B9-667B-4041-8581-462771FC68FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496093B9-667B-4041-8581-462771FC68FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,7 +82,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C} = {A38CA74C-DCCE-4FAF-BB65-582D86D3AEBF}
 		{496093B9-667B-4041-8581-462771FC68FC} = {41764C70-6B77-41D3-B438-82ED44E954F7}
 		{92CBB2CC-844F-4B52-9208-87B322BB6DBA} = {D1152B5E-95F1-48D5-A2B0-033D2BE9272D}
 		{09C83554-3836-46E1-9E55-AAC5F235080C} = {D1152B5E-95F1-48D5-A2B0-033D2BE9272D}

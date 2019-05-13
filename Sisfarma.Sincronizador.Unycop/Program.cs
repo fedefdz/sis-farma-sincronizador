@@ -4,6 +4,7 @@ using Sisfarma.RestClient.RestSharp;
 using Sisfarma.Sincronizador.Core.Config;
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Infrastructure.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Unycop.Properties;
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,10 @@ namespace Sisfarma.Sincronizador.Unycop
 
             //LeerFicherosConfiguracion(ref _remoteServer, ref _remoteToken);
 
-            //RemoteConfig.Setup(_remoteServer, _remoteToken);
-            //LocalConfig.Setup(GetConnexionLocal());           
+            RemoteConfig.Setup(_remoteServer, _remoteToken);
+            LocalConfig.Setup(GetConnexionLocal());
+
+            Task.Factory.StartNew(() => new PuntoPendienteSincronizador(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
 
             //Task.Factory.StartNew(() => new PowerSwitchProgramado(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             //Task.Factory.StartNew(() => new PowerSwitchManual(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
@@ -70,8 +73,8 @@ namespace Sisfarma.Sincronizador.Unycop
         private static ContextMenuStrip GetSincronizadorMenuStrip()
         {
             var cms = new ContextMenuStrip();
-            cms.Items.Add($"Salir {ApplicationDeployment.CurrentDeployment.CurrentVersion}", null, (sender, @event) => Application.Exit());
-            //cms.Items.Add($"Salir", null, (sender, @event) => Application.Exit());
+            //cms.Items.Add($"Salir {ApplicationDeployment.CurrentDeployment.CurrentVersion}", null, (sender, @event) => Application.Exit());
+            cms.Items.Add($"Salir", null, (sender, @event) => Application.Exit());
             return cms;
         }
 
