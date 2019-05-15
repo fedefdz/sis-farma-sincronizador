@@ -5,8 +5,10 @@ using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
+using DTO = Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO;
 
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 {
@@ -22,7 +24,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         private readonly IFamiliaRepository _familiaRepository;
         private readonly ILaboratorioRepository _laboratorioRepository;
 
-        private readonly decimal _factorCentecimal;
+        private readonly decimal _factorCentecimal = 0.01m;
         
         public VentasRepository(LocalConfig config, 
             IClientesRepository clientesRepository,
@@ -46,9 +48,31 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             _vendedoresRepository = vendedoresRepository ?? throw new ArgumentNullException(nameof(vendedoresRepository));
         }
 
+        public VentasRepository(
+            IClientesRepository clientesRepository,
+            ITicketRepository ticketRepository,
+            IVendedoresRepository vendedoresRepository,
+            IFarmacoRepository farmacoRepository,
+            ICodigoBarraRepository barraRepository,
+            IProveedorRepository proveedorRepository,
+            ICategoriaRepository categoriaRepository,
+            IFamiliaRepository familiaRepository,
+            ILaboratorioRepository laboratorioRepository)
+        {
+            _clientesRepository = clientesRepository ?? throw new ArgumentNullException(nameof(clientesRepository));
+            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
+            _farmacoRepository = farmacoRepository ?? throw new ArgumentNullException(nameof(farmacoRepository));
+            _barraRepository = barraRepository ?? throw new ArgumentNullException(nameof(barraRepository));
+            _proveedorRepository = proveedorRepository ?? throw new ArgumentNullException(nameof(proveedorRepository));
+            _categoriaRepository = categoriaRepository ?? throw new ArgumentNullException(nameof(categoriaRepository));
+            _familiaRepository = familiaRepository ?? throw new ArgumentNullException(nameof(familiaRepository));
+            _laboratorioRepository = laboratorioRepository ?? throw new ArgumentNullException(nameof(laboratorioRepository));
+            _vendedoresRepository = vendedoresRepository ?? throw new ArgumentNullException(nameof(vendedoresRepository));
+        }
+
         public VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql = @"SELECT * FROM lineaventa WHERE IdVenta = @venta AND IdNLinea = @linea";
                 return db.Database.SqlQuery<VentaDetalle>(sql,
@@ -60,24 +84,40 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public List<Venta> GetAllByIdGreaterOrEqual(int year, long value)
         {
-            using (var db = FarmaciaContext.Create(_config))
-            {
-                var sql = @"SELECT ID_VENTA as Id, Fecha as FechaHora, NPuesto as Puesto, Cliente as ClienteId, Vendedor as VendedorId, Descuento as TotalDescuento, Pago as TotalBruto, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
+            // Access no handlea long
+            var valueInteger = (int)value;
 
-                var ventas =  db.Database.SqlQuery<Venta>(sql,
-                    new SqlParameter("year", year),
-                    new SqlParameter("value", value))
+            using (var db = FarmaciaContext.Ventas())
+            {
+                var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
+
+                var ventasAccess =  db.Database.SqlQuery<DTO.Venta>(sql,
+                    new OleDbParameter("year", year),
+                    new OleDbParameter("value", valueInteger))
+                    .Take(1000)
                     .ToList();
 
-                foreach (var venta in ventas)
-                {
-                    if (venta.ClienteId > 0)
-                        venta.Cliente = _clientesRepository.GetOneOrDefaultById(venta.ClienteId);
 
-                    venta.TotalBruto *= _factorCentecimal;
-                    venta.TotalDescuento *= _factorCentecimal;
+                var ventas = new List<Venta>();
+                foreach (var ventaAccess in ventasAccess)
+                {
+                    var venta = new Venta
+                    {
+                        Id = ventaAccess.Id,
+                        FechaHora = ventaAccess.Fecha,
+                        Puesto = ventaAccess.Puesto,
+                        ClienteId = ventaAccess.Cliente,
+                        VendedorId = ventaAccess.Vendedor,
+                        TotalDescuento = ventaAccess.Descuento * _factorCentecimal,
+                        TotalBruto = ventaAccess.Pago * _factorCentecimal,
+                        Importe = ventaAccess.Importe * _factorCentecimal,                        
+                    };
                     
-                    var ticket = _ticketRepository.GetOneOrdefaultByVentaId(venta.Id);
+
+                    if (ventaAccess.Cliente > 0)
+                         venta.Cliente =_clientesRepository.GetOneOrDefaultById(ventaAccess.Cliente);
+                    
+                    var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id);
                     if (ticket != null)
                     {
                         venta.Ticket = new Ticket
@@ -87,8 +127,10 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                         };
                     }
 
-                    venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(venta.VendedorId)?.Nombre;
-                    venta.Detalle = GetDetalleDeVentaByVentaId(venta.Id);
+                    venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaAccess.Vendedor)?.Nombre;
+                    venta.Detalle = GetDetalleDeVentaByVentaId(ventaAccess.Id);
+
+                    ventas.Add(venta);
                 }
 
                 return ventas;
@@ -97,7 +139,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public List<Venta> GetVirtualesLessThanId(long venta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql = @"SELECT v.* FROM venta v INNER JOIN lineaventavirtual lvv ON lvv.idventa = v.idventa AND (lvv.codigo = 'Pago' OR lvv.codigo = 'A Cuenta') " +
                     @"WHERE v.ejercicio >= 2015 AND v.IdVenta < @venta ORDER BY v.IdVenta DESC";
@@ -109,7 +151,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql =
                 @"SELECT * FROM lineaventavirtual WHERE IdVenta = @venta AND (codigo = 'Pago' OR codigo = 'A Cuenta')";
@@ -121,7 +163,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public Venta GetOneOrDefaultById(long venta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql = @"SELECT * FROM venta WHERE IdVenta = @venta ORDER BY IdVenta ASC";
                 return db.Database.SqlQuery<Venta>(sql,
@@ -132,7 +174,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public List<Venta> GetGreatThanOrEqual(long venta, DateTime fecha)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var year = fecha.Year;
                 var sql = "SELECT * FROM venta WHERE IdVenta >= @venta AND  ejercicio = @year AND FechaHora >= @fecha ORDER BY IdVenta ASC";
@@ -147,26 +189,33 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            var ventaInteger = (int)venta;
+
+            using (var db = FarmaciaContext.Ventas())
             {
-                var sql = @"SELECT ID_Farmaco as Codigo, Organismo as Receta, Cantidad, PVP, DescLin as Descuento, Importe FROM lineas_venta WHERE ID_venta= @venta";
-                var detalle =  db.Database.SqlQuery<VentaDetalle>(sql,
-                    new SqlParameter("venta", venta))
+                var sql = @"SELECT ID_Farmaco as Farmaco, Organismo as Receta, Cantidad, PVP, DescLin as Descuento, Importe FROM lineas_venta WHERE ID_venta= @venta";
+                var lineas =  db.Database.SqlQuery<DTO.LineaVenta>(sql,
+                    new OleDbParameter("venta", ventaInteger))
                     .ToList();
 
                 var linea = 0;
-                foreach (var item in detalle)
+                var detalle = new List<VentaDetalle>();
+                foreach (var item in lineas)
                 {
-                    item.Linea = ++linea;
-                    item.Importe *= _factorCentecimal;
-                    item.PVP *= _factorCentecimal;
-                    item.Descuento *= _factorCentecimal;
-                    var farmaco = _farmacoRepository.GetOneOrDefaultById(item.Codigo.ToLongOrDefault());
+                    var ventaDetalle = new VentaDetalle
+                    {
+                        Linea = ++linea,
+                        Importe = item.Importe * _factorCentecimal,
+                        PVP  = item.PVP * _factorCentecimal,
+                        Descuento = item.Descuento * _factorCentecimal
+                    };
+                                        
+                    var farmaco = _farmacoRepository.GetOneOrDefaultById(item.Farmaco);
                     if (farmaco != null)
                     {
                         var pcoste = farmaco.PrecioUnicoEntrada.HasValue && farmaco.PrecioUnicoEntrada != 0
-                            ? farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
-                            : (farmaco.PrecioMedio ?? 0) * _factorCentecimal;
+                            ? (decimal) farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
+                            : ((decimal?) farmaco.PrecioMedio ?? 0m) * _factorCentecimal;
 
                         var codigoBarra = _barraRepository.GetOneByFarmacoId(farmaco.Id);
                         var proveedor = _proveedorRepository.GetOneOrDefaultByCodigoNacional(farmaco.Id);
@@ -181,13 +230,13 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                                 farmaco.SubcategoriaId.Value)
                             : null;
 
-                        var familia = _familiaRepository.GetOneOrDefaultById(farmaco.FamiliaId);
+                        var familia = _familiaRepository.GetOneOrDefaultById(farmaco.Familia);
                         var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio);
 
-                        item.Farmaco = new Farmaco
+                        ventaDetalle.Farmaco = new Farmaco
                         {
                             Id = farmaco.Id,
-                            Codigo = item.Codigo,
+                            Codigo = item.Farmaco.ToString(),
                             PrecioCoste = pcoste,
                             CodigoBarras = codigoBarra,
                             Proveedor = proveedor,
@@ -198,7 +247,9 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                             Denominacion = farmaco.Denominacion
                         };
                     }
-                    else item.Farmaco = new Farmaco { Id = item.Codigo.ToLongOrDefault(), Codigo = item.Codigo };
+                    else ventaDetalle.Farmaco = new Farmaco { Id = item.Farmaco, Codigo = item.Farmaco.ToString() };
+
+                    detalle.Add(ventaDetalle);
                 }
 
                 return detalle;
@@ -207,7 +258,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public Ticket GetOneOrDefaultTicketByVentaId(long venta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql = @"SELECT Id_Ticket as Numero, Serie FROM Tickets_D WHERE Id_Venta = @venta";
                 return db.Database.SqlQuery<Ticket>(sql,
@@ -218,7 +269,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Ventas())
             {
                 var sql = @"SELECT * FROM LineaVentaReden WHERE IdVenta = @venta AND IdNLinea = @linea";
                 return db.Database.SqlQuery<LineaVentaRedencion>(sql,

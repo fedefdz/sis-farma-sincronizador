@@ -1,6 +1,7 @@
 ﻿using Sisfarma.Sincronizador.Core.Config;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -19,24 +20,28 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             : base(config)
         { }
 
+        public VentasPremiumRepository() { }
+
         public VentaPremiun GetOneOrDefaultByClienteId(long id)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            var idInteger = (int)id;
+
+            using (var db = FarmaciaContext.Fidelizacion())
             {
-                var sql = $"SELECT TOP 1  PuntosIniciales, PuntosVentas, PuntosACanjear FROM Ventas_FarmaPremium WHERE ClienteUW = {id} ORDER BY Fecha DESC";
+                var sql = $"SELECT TOP 1  PuntosIniciales, PuntosVentas, PuntosACanjear FROM Ventas_FarmaPremium WHERE ClienteUW = @id ORDER BY Fecha DESC";
                 return db.Database.SqlQuery<VentaPremiun>(sql,
-                        new SqlParameter("id", id))
+                        new OleDbParameter("id", idInteger))
                         .FirstOrDefault();
             }
         }
 
         public VentaPremiun GetOneOrDefaultByTarjeta(string tarjeta)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Fidelizacion())
             {
-                var sql = $"SELECT TOP 1  PuntosIniciales, PuntosVentas, PuntosACanjear FROM Ventas_FarmaPremium WHERE ClienteFarma = '{tarjeta}' ORDER BY Fecha DESC";
+                var sql = $"SELECT TOP 1  PuntosIniciales, PuntosVentas, PuntosACanjear FROM Ventas_FarmaPremium WHERE ClienteFarma = @tarjeta ORDER BY Fecha DESC";
                 return db.Database.SqlQuery<VentaPremiun>(sql,
-                        new SqlParameter("tarjeta", tarjeta))
+                        new OleDbParameter("tarjeta", tarjeta))
                         .FirstOrDefault();
             }            
         }

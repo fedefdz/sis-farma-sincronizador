@@ -2,7 +2,7 @@
 {
     public class Ticket
     {
-        public long Numero { get; set; }
+        public int Numero { get; set; }
 
         public string Serie { get; set; }
     }

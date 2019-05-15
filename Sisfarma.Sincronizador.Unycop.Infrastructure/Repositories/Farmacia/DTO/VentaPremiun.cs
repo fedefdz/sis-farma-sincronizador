@@ -2,10 +2,10 @@
 {
     public class VentaPremiun
     {
-        public long PuntosIniciales { get; set; }
+        public int PuntosIniciales { get; set; }
 
-        public long PuntosVentas { get; set; }
+        public int PuntosVentas { get; set; }
         
-        public long PuntosACanjear { get; set; }
+        public int PuntosACanjear { get; set; }
     }
 }

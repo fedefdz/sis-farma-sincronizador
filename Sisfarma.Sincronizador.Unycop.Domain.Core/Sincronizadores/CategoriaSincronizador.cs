@@ -14,20 +14,20 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void Process()
         {
-            var familias = _farmacia.Familias.GetByDescripcion();
-            foreach (var familia in familias)
-            {
-                Task.Delay(5).Wait();
-                _cancellationToken.ThrowIfCancellationRequested();
+            //var familias = _farmacia.Familias.GetByDescripcion();
+            //foreach (var familia in familias)
+            //{
+            //    Task.Delay(5).Wait();
+            //    _cancellationToken.ThrowIfCancellationRequested();
 
-                _fisiotes.Categorias.Insert(new Categoria
-                {
-                    categoria = familia.Nombre,
-                    padre = PADRE_DEFAULT,
-                    prestashopPadreId = null,
-                    tipo = "Familia"
-                });
-            }
+            //    _fisiotes.Categorias.Insert(new Categoria
+            //    {
+            //        categoria = familia.Nombre,
+            //        padre = PADRE_DEFAULT,
+            //        prestashopPadreId = null,
+            //        tipo = "Familia"
+            //    });
+            //}
 
             var categorias = _farmacia.Categorias.GetByDescripcion();
             foreach (var categoria in categorias)

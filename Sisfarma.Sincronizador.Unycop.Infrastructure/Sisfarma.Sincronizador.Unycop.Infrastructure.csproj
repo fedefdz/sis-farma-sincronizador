@@ -62,7 +62,9 @@
     <Compile Include="Repositories\Farmacia\DestinatariosRepository.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Cliente.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Farmaco.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\LineaVenta.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Ticket.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\Venta.cs" />
     <Compile Include="Repositories\Farmacia\DTO\VentaPremiun.cs" />
     <Compile Include="Repositories\Farmacia\EncargosRepository.cs" />
     <Compile Include="Repositories\Farmacia\CategoriasRepository.cs" />
@@ -73,7 +75,6 @@
     <Compile Include="Repositories\Farmacia\ListasArticulosRepository.cs" />
     <Compile Include="Repositories\Farmacia\PedidosRepository.cs" />
     <Compile Include="Repositories\Farmacia\ProveedoresRepository.cs" />
-    <Compile Include="Repositories\Farmacia\RecepcionesRepository.cs" />
     <Compile Include="Repositories\Farmacia\RecepcionRespository.cs" />
     <Compile Include="Repositories\Farmacia\SinonimosRepository.cs" />
     <Compile Include="Repositories\Farmacia\VendedoresRepository.cs" />

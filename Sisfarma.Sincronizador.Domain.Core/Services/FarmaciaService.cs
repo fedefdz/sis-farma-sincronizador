@@ -39,5 +39,11 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             Ventas = ventas ?? throw new ArgumentNullException(nameof(ventas));
             Clientes = clientes ?? throw new ArgumentNullException(nameof(clientes));
         }
+
+        public FarmaciaService(
+            ICategoriasRepository categorias)
+        {
+            Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));            
+        }
     }
 }

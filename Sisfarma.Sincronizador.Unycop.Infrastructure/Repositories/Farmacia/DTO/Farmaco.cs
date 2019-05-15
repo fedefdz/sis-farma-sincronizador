@@ -2,17 +2,17 @@
 {
     public class Farmaco
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
 
-        public decimal? PrecioMedio { get; set; }
+        public float? PrecioMedio { get; set; }
 
-        public decimal? PrecioUnicoEntrada { get; set; }
+        public float? PrecioUnicoEntrada { get; set; }
 
-        public long FamiliaId { get; set; }
+        public byte Familia { get; set; }
 
-        public long? CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
 
-        public long? SubcategoriaId { get; set; }
+        public int? SubcategoriaId { get; set; }
 
         public string Laboratorio { get; set; }
 

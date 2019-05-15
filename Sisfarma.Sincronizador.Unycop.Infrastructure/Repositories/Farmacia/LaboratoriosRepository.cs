@@ -2,6 +2,7 @@
 using Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -12,13 +13,15 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public LaboratorioRepository(LocalConfig config) : base(config)
         { }
 
+        public LaboratorioRepository() { }
+
         public Laboratorio GetOneOrDefaultByCodigo(string codigo)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = "SELECT ID_Laboratorio as Codigo, Nombre FROM Laboratorios WHERE ID_Laboratorio = @codigo";
                 return db.Database.SqlQuery<Laboratorio>(sql,
-                    new SqlParameter("codigo", codigo))
+                    new OleDbParameter("codigo", codigo))
                     .FirstOrDefault();
             }
         }        

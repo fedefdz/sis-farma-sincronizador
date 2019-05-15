@@ -2,8 +2,10 @@
 using Sisfarma.ClickOnce;
 using Sisfarma.RestClient.RestSharp;
 using Sisfarma.Sincronizador.Core.Config;
+using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Infrastructure.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Domain.Core.Factories;
 using Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Unycop.Properties;
 using System;
@@ -42,10 +44,13 @@ namespace Sisfarma.Sincronizador.Unycop
 
             //LeerFicherosConfiguracion(ref _remoteServer, ref _remoteToken);
 
-            RemoteConfig.Setup(_remoteServer, _remoteToken);
-            LocalConfig.Setup(GetConnexionLocal());
+            //RemoteConfig.Setup(_remoteServer, _remoteToken);
+            //LocalConfig.Setup(GetConnexionLocal());
 
-            Task.Factory.StartNew(() => new PuntoPendienteSincronizador(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
+                farmacia: FarmaciaFactory.Create(),
+                fisiotes: new SisfarmaService("",""))
+                    .SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
 
             //Task.Factory.StartNew(() => new PowerSwitchProgramado(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             //Task.Factory.StartNew(() => new PowerSwitchManual(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));

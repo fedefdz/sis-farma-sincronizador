@@ -13,9 +13,11 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public CategoriasRepository(LocalConfig config) : base(config)
         { }
 
+        public CategoriasRepository() { }
+
         public Categoria GetById(short id)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = @"SELECT * FROM familia WHERE IdFamilia = @id";
                 return db.Database.SqlQuery<Categoria>(sql,
@@ -26,7 +28,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public IEnumerable<Categoria> Get()
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = "select * from familia";
                 return db.Database.SqlQuery<Categoria>(sql)
@@ -36,7 +38,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public IEnumerable<Categoria> GetByDescripcion()
         {
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = @"select nombre from categorias WHERE nombre NOT IN ('ESPECIALIDAD', 'EFP', 'SIN FAMILIA') AND nombre NOT LIKE '%ESPECIALIDADES%' AND nombre NOT LIKE '%Medicamento%'";
                 return db.Database.SqlQuery<Categoria>(sql)

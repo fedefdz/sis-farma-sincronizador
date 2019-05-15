@@ -11,5 +11,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
+
+        public FarmaciaRepository() { }
     }
 }

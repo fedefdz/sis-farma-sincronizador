@@ -2,31 +2,31 @@
 {
     internal class Cliente
     {     
-        public long Id { get; set; }
+        public int Id { get; set; }
 
-        public string Tarjeta { get; set; }
+        public string Clave { get; set; }
 
         public string EstadoCivil { get; set; }
 
-        public string Celular { get; set; }
+        public string Movil { get; set; }
 
         public string Telefono { get; set; }
 
-        public string Email { get; set; }
+        public string Correo { get; set; }
 
-        public long FechaNacimiento { get; set; }
+        public int FechaNacimiento { get; set; }
 
-        public long Puntos { get; set; }
+        public double Puntos { get; set; }
 
-        public string NumeroIdentificacion { get; set; }
+        public string DNICIF { get; set; }
 
-        public short LOPD { get; set; }
+        public bool LOPD { get; set; }
 
         public string Sexo { get; set; }
 
-        public long Baja { get; set; }
+        public int Baja { get; set; }
 
-        public long FechaAlta { get; set; }
+        public int FechaAlta { get; set; }
 
         public string Direccion { get; set; }
 
@@ -34,6 +34,6 @@
 
         public string CodigoPostal { get; set; }
 
-        public string NombreCompleto { get; set; }
+        public string Nombre { get; set; }
     }
 }

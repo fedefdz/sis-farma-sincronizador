@@ -4,6 +4,7 @@ using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -14,6 +15,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public FamiliaRepository(LocalConfig config) : base(config)
         { }
 
+        public FamiliaRepository() { }
+
         public IEnumerable<Familia> Get()
         {
             throw new NotImplementedException();
@@ -21,7 +24,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public IEnumerable<Familia> GetByDescripcion()
         {            
-            using (var db = FarmaciaContext.Create(_config))
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = @"select nombre from familias WHERE nombre NOT IN ('ESPECIALIDAD', 'EFP', 'SIN FAMILIA') AND nombre NOT LIKE '%ESPECIALIDADES%' AND nombre NOT LIKE '%Medicamento%'";
                 return db.Database.SqlQuery<Familia>(sql)
@@ -31,11 +34,13 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public Familia GetOneOrDefaultById(long id)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            var idInteger = (int)id;
+
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = "SELECT Nombre FROM familias WHERE ID_Familia = @id";
                 return db.Database.SqlQuery<Familia>(sql,
-                    new SqlParameter("id", id))
+                    new OleDbParameter("id", id))
                         .FirstOrDefault();
             }
         }

@@ -30,15 +30,15 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void LoadConfiguration()
         {
-            base.LoadConfiguration();
-            _clasificacion = !string.IsNullOrWhiteSpace(ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION])
-                ? ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION]
-                : TIPO_CLASIFICACION_DEFAULT;            
+            //base.LoadConfiguration();
+            //_clasificacion = !string.IsNullOrWhiteSpace(ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION])
+            //    ? ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION]
+            //    : TIPO_CLASIFICACION_DEFAULT;            
         }
 
         public override void Process()
         {
-            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : _anioInicio;
+            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : 2016;//_anioInicio;
                 
             var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);
 
@@ -59,6 +59,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 _ultimaVenta = venta.Id;
             }
 
+            // <= 1 porque las ventas se recuperan con >= ventaID
             if (ventas.Count() <= 1)
             {
                 _aniosProcesados.Add(anioProcesando + 1);

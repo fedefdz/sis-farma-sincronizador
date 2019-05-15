@@ -26,7 +26,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         { }
 
         public override void LoadConfiguration()
-        {            
+        {
             _perteneceFarmazul = bool.Parse(ConfiguracionPredefinida[Configuracion.FIELD_ES_FARMAZUL]);
             _puntosDeSisfarma = ConfiguracionPredefinida[Configuracion.FIELD_PUNTOS_SISFARMA];
             _cargarPuntos = ConfiguracionPredefinida[Configuracion.FIELD_CARGAR_PUNTOS];
@@ -39,7 +39,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 
         public override void PreSincronizacion()
         {
-            _ultimaVenta = _fisiotes.PuntosPendientes.GetUltimaVenta();
+            //_ultimaVenta = _fisiotes.PuntosPendientes.GetUltimaVenta();
         }
 
         public override void Process()

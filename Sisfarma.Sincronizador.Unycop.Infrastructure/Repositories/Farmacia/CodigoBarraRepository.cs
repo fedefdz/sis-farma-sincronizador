@@ -1,5 +1,6 @@
 ﻿using Sisfarma.Sincronizador.Core.Config;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -16,13 +17,16 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public CodigoBarraRepository(LocalConfig config) : base(config)
         { }
 
+        public CodigoBarraRepository() { }
+
         public string GetOneByFarmacoId(long farmaco)
         {
-            using (var db = FarmaciaContext.Create(_config))
+            var farmacoInteger = (int)farmaco;
+            using (var db = FarmaciaContext.Default())
             {
                 var sql = @"select Cod_Barra from codigo_barra where ID_farmaco = @farmaco";                    
                 return db.Database.SqlQuery<string>(sql,
-                    new SqlParameter("farmaco", farmaco))
+                    new OleDbParameter("farmaco", farmacoInteger))
                         .FirstOrDefault();
             }
         }
