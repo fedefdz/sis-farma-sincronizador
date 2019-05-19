@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Helpers\ConfiguracionDictionary.cs" />
     <Compile Include="Config\ConexionLocal.cs" />

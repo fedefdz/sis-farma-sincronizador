@@ -30,10 +30,10 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void LoadConfiguration()
         {
-            //base.LoadConfiguration();
-            //_clasificacion = !string.IsNullOrWhiteSpace(ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION])
-            //    ? ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION]
-            //    : TIPO_CLASIFICACION_DEFAULT;            
+            base.LoadConfiguration();
+            _clasificacion = !string.IsNullOrWhiteSpace(ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION])
+                ? ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION]
+                : TIPO_CLASIFICACION_DEFAULT;            
         }
 
         public override void Process()
@@ -49,13 +49,13 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
                 if (venta.HasCliente())
                     InsertOrUpdateCliente(venta.Cliente);
-                
-                var puntosPendientes = GenerarPuntosPendientes(venta);
-                foreach (var puntoPendiente in puntosPendientes)
-                {
-                    _fisiotes.PuntosPendientes.Insert(puntoPendiente);
-                }
-                
+
+                //var puntosPendientes = GenerarPuntosPendientes(venta);
+                //foreach (var puntoPendiente in puntosPendientes)
+                //{
+                //    _fisiotes.PuntosPendientes.Insert(puntoPendiente);
+                //}
+
                 _ultimaVenta = venta.Id;
             }
 

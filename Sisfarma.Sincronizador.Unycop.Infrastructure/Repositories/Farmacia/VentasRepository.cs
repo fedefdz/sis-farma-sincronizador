@@ -86,55 +86,55 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             // Access no handlea long
             var valueInteger = (int)value;
+            List<DTO.Venta> ventasAccess;
 
-            using (var db = FarmaciaContext.Ventas())
+            using (var db = FarmaciaContext.Ventas(year))
             {
                 var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
 
-                var ventasAccess =  db.Database.SqlQuery<DTO.Venta>(sql,
+                ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
                     new OleDbParameter("year", year),
                     new OleDbParameter("value", valueInteger))
-                    .Take(1000)
+                    .Take(10)
                     .ToList();
+            }
 
-
-                var ventas = new List<Venta>();
-                foreach (var ventaAccess in ventasAccess)
+            var ventas = new List<Venta>();
+            foreach (var ventaAccess in ventasAccess)
+            {
+                var venta = new Venta
                 {
-                    var venta = new Venta
+                    Id = ventaAccess.Id,
+                    FechaHora = ventaAccess.Fecha,
+                    Puesto = ventaAccess.Puesto,
+                    ClienteId = ventaAccess.Cliente,
+                    VendedorId = ventaAccess.Vendedor,
+                    TotalDescuento = ventaAccess.Descuento * _factorCentecimal,
+                    TotalBruto = ventaAccess.Pago * _factorCentecimal,
+                    Importe = ventaAccess.Importe * _factorCentecimal,                        
+                };
+                    
+
+                if (ventaAccess.Cliente > 0)
+                        venta.Cliente =_clientesRepository.GetOneOrDefaultById(ventaAccess.Cliente);
+                    
+                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id);
+                if (ticket != null)
+                {
+                    venta.Ticket = new Ticket
                     {
-                        Id = ventaAccess.Id,
-                        FechaHora = ventaAccess.Fecha,
-                        Puesto = ventaAccess.Puesto,
-                        ClienteId = ventaAccess.Cliente,
-                        VendedorId = ventaAccess.Vendedor,
-                        TotalDescuento = ventaAccess.Descuento * _factorCentecimal,
-                        TotalBruto = ventaAccess.Pago * _factorCentecimal,
-                        Importe = ventaAccess.Importe * _factorCentecimal,                        
+                        Numero = ticket.Numero,
+                        Serie = ticket.Serie
                     };
-                    
-
-                    if (ventaAccess.Cliente > 0)
-                         venta.Cliente =_clientesRepository.GetOneOrDefaultById(ventaAccess.Cliente);
-                    
-                    var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id);
-                    if (ticket != null)
-                    {
-                        venta.Ticket = new Ticket
-                        {
-                            Numero = ticket.Numero,
-                            Serie = ticket.Serie
-                        };
-                    }
-
-                    venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaAccess.Vendedor)?.Nombre;
-                    venta.Detalle = GetDetalleDeVentaByVentaId(ventaAccess.Id);
-
-                    ventas.Add(venta);
                 }
 
-                return ventas;
+                venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaAccess.Vendedor)?.Nombre;
+                venta.Detalle = GetDetalleDeVentaByVentaId(ventaAccess.Id);
+
+                ventas.Add(venta);
             }
+
+            return ventas;            
         }
 
         public List<Venta> GetVirtualesLessThanId(long venta)

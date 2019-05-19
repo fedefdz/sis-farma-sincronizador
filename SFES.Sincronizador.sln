@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.Sincronizador.Unyc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.Sincronizador.Unycop.Domain.Core", "Sisfarma.Sincronizador.Unycop.Domain.Core\Sisfarma.Sincronizador.Unycop.Domain.Core.csproj", "{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sisfarma.Sincronizador", "Sisfarma.Sincronizador\Sisfarma.Sincronizador.csproj", "{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769FAF8F-021C-4315-8A1B-28FC4C63EF5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

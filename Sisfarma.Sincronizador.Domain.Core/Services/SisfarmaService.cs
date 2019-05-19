@@ -56,37 +56,37 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
         public IProgramacionExternalService Programacion { get; set; }
 
         public SisfarmaService(
-            IClientesExternalService clientes, 
-            IHuecosExternalService huecos, 
-            IPuntosPendientesExternalService puntosPendientes, 
-            IConfiguracionesExternalService configuraciones, 
-            IEntregasExternalService entregas, 
-            IMedicamentosExternalService medicamentos, 
-            ISinonimosExternalService sinonimos, 
-            IPedidosExternalService pedidos, 
-            IListasExternalService listas, 
-            ICategoriasExternalService categorias, 
-            IEncargosExternalService encargos, 
-            IFamiliasExternalService familias, 
-            IFaltasExternalService faltas, 
-            IProveedoresExternalService proveedores, 
-            IProgramacionExternalService programacion)
+            //IClientesExternalService clientes, 
+            //IHuecosExternalService huecos, 
+            //IPuntosPendientesExternalService puntosPendientes, 
+            IConfiguracionesExternalService configuraciones)
+            //IEntregasExternalService entregas, 
+            //IMedicamentosExternalService medicamentos, 
+            //ISinonimosExternalService sinonimos, 
+            //IPedidosExternalService pedidos, 
+            //IListasExternalService listas, 
+            //ICategoriasExternalService categorias, 
+            //IEncargosExternalService encargos, 
+            //IFamiliasExternalService familias, 
+            //IFaltasExternalService faltas, 
+            //IProveedoresExternalService proveedores, 
+            //IProgramacionExternalService programacion)
         {
-            Clientes = clientes ?? throw new ArgumentNullException(nameof(clientes));
-            Huecos = huecos ?? throw new ArgumentNullException(nameof(huecos));
-            PuntosPendientes = puntosPendientes ?? throw new ArgumentNullException(nameof(puntosPendientes));
+            //Clientes = clientes ?? throw new ArgumentNullException(nameof(clientes));
+            //Huecos = huecos ?? throw new ArgumentNullException(nameof(huecos));
+            //PuntosPendientes = puntosPendientes ?? throw new ArgumentNullException(nameof(puntosPendientes));
             Configuraciones = configuraciones ?? throw new ArgumentNullException(nameof(configuraciones));
-            Entregas = entregas ?? throw new ArgumentNullException(nameof(entregas));
-            Medicamentos = medicamentos ?? throw new ArgumentNullException(nameof(medicamentos));
-            Sinonimos = sinonimos ?? throw new ArgumentNullException(nameof(sinonimos));
-            Pedidos = pedidos ?? throw new ArgumentNullException(nameof(pedidos));
-            Listas = listas ?? throw new ArgumentNullException(nameof(listas));
-            Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));
-            Encargos = encargos ?? throw new ArgumentNullException(nameof(encargos));
-            Familias = familias ?? throw new ArgumentNullException(nameof(familias));
-            Faltas = faltas ?? throw new ArgumentNullException(nameof(faltas));
-            Proveedores = proveedores ?? throw new ArgumentNullException(nameof(proveedores));
-            Programacion = programacion ?? throw new ArgumentNullException(nameof(programacion));
+            //Entregas = entregas ?? throw new ArgumentNullException(nameof(entregas));
+            //Medicamentos = medicamentos ?? throw new ArgumentNullException(nameof(medicamentos));
+            //Sinonimos = sinonimos ?? throw new ArgumentNullException(nameof(sinonimos));
+            //Pedidos = pedidos ?? throw new ArgumentNullException(nameof(pedidos));
+            //Listas = listas ?? throw new ArgumentNullException(nameof(listas));
+            //Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));
+            //Encargos = encargos ?? throw new ArgumentNullException(nameof(encargos));
+            //Familias = familias ?? throw new ArgumentNullException(nameof(familias));
+            //Faltas = faltas ?? throw new ArgumentNullException(nameof(faltas));
+            //Proveedores = proveedores ?? throw new ArgumentNullException(nameof(proveedores));
+            //Programacion = programacion ?? throw new ArgumentNullException(nameof(programacion));
         }
 
         public SisfarmaService(string host, string token)

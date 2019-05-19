@@ -49,7 +49,7 @@ namespace Sisfarma.Sincronizador.Unycop
 
             Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
                 farmacia: FarmaciaFactory.Create(),
-                fisiotes: new SisfarmaService("",""))
+                fisiotes: SisfarmaFactory.Create())
                     .SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
 
             //Task.Factory.StartNew(() => new PowerSwitchProgramado(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
