@@ -88,23 +88,31 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             var valueInteger = (int)value;
             List<DTO.Venta> ventasAccess;
 
-            using (var db = FarmaciaContext.Ventas(year))
+            try
             {
-                var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
+                using (var db = FarmaciaContext.Ventas(year))
+                {
+                    var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
 
-                ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
-                    new OleDbParameter("year", year),
-                    new OleDbParameter("value", valueInteger))
-                    .Take(10)
-                    .ToList();
+                    ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
+                        new OleDbParameter("year", year),
+                        new OleDbParameter("value", valueInteger))
+                        .Take(10)
+                        .ToList();
+                }
             }
-
+            catch (FarmaciaContextException)
+            {
+                ventasAccess =  new List<DTO.Venta>();
+            }
+            
             var ventas = new List<Venta>();
             foreach (var ventaAccess in ventasAccess)
             {
                 var venta = new Venta
                 {
                     Id = ventaAccess.Id,
+                    Tipo = ventaAccess.Tipo.ToString(),
                     FechaHora = ventaAccess.Fecha,
                     Puesto = ventaAccess.Puesto,
                     ClienteId = ventaAccess.Cliente,
@@ -191,69 +199,78 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             var ventaInteger = (int)venta;
 
-            using (var db = FarmaciaContext.Ventas())
+            try
             {
-                var sql = @"SELECT ID_Farmaco as Farmaco, Organismo as Receta, Cantidad, PVP, DescLin as Descuento, Importe FROM lineas_venta WHERE ID_venta= @venta";
-                var lineas =  db.Database.SqlQuery<DTO.LineaVenta>(sql,
-                    new OleDbParameter("venta", ventaInteger))
-                    .ToList();
-
-                var linea = 0;
-                var detalle = new List<VentaDetalle>();
-                foreach (var item in lineas)
+                using (var db = FarmaciaContext.Ventas())
                 {
-                    var ventaDetalle = new VentaDetalle
+                    var sql = @"SELECT ID_Farmaco as Farmaco, Organismo, Cantidad, PVP, DescLin as Descuento, Importe FROM lineas_venta WHERE ID_venta= @venta";
+                    var lineas = db.Database.SqlQuery<DTO.LineaVenta>(sql,
+                        new OleDbParameter("venta", ventaInteger))
+                        .ToList();
+
+                    var linea = 0;
+                    var detalle = new List<VentaDetalle>();
+                    foreach (var item in lineas)
                     {
-                        Linea = ++linea,
-                        Importe = item.Importe * _factorCentecimal,
-                        PVP  = item.PVP * _factorCentecimal,
-                        Descuento = item.Descuento * _factorCentecimal
-                    };
-                                        
-                    var farmaco = _farmacoRepository.GetOneOrDefaultById(item.Farmaco);
-                    if (farmaco != null)
-                    {
-                        var pcoste = farmaco.PrecioUnicoEntrada.HasValue && farmaco.PrecioUnicoEntrada != 0
-                            ? (decimal) farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
-                            : ((decimal?) farmaco.PrecioMedio ?? 0m) * _factorCentecimal;
-
-                        var codigoBarra = _barraRepository.GetOneByFarmacoId(farmaco.Id);
-                        var proveedor = _proveedorRepository.GetOneOrDefaultByCodigoNacional(farmaco.Id);
-
-                        var categoria = farmaco.CategoriaId.HasValue
-                            ? _categoriaRepository.GetOneOrDefaultById(farmaco.CategoriaId.Value)
-                            : null;
-
-                        var subcategoria = farmaco.CategoriaId.HasValue && farmaco.SubcategoriaId.HasValue
-                            ? _categoriaRepository.GetSubcategoriaOneOrDefaultByKey(
-                                farmaco.CategoriaId.Value,
-                                farmaco.SubcategoriaId.Value)
-                            : null;
-
-                        var familia = _familiaRepository.GetOneOrDefaultById(farmaco.Familia);
-                        var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio);
-
-                        ventaDetalle.Farmaco = new Farmaco
+                        var ventaDetalle = new VentaDetalle
                         {
-                            Id = farmaco.Id,
-                            Codigo = item.Farmaco.ToString(),
-                            PrecioCoste = pcoste,
-                            CodigoBarras = codigoBarra,
-                            Proveedor = proveedor,
-                            Categoria = categoria,
-                            Subcategoria = subcategoria,
-                            Familia = familia,
-                            Laboratorio = laboratorio,
-                            Denominacion = farmaco.Denominacion
+                            Linea = ++linea,
+                            Importe = item.Importe * _factorCentecimal,
+                            PVP = item.PVP * _factorCentecimal,
+                            Descuento = item.Descuento * _factorCentecimal,
+                            Receta = item.Organismo,
+                            Cantidad = item.Cantidad
                         };
+
+                        var farmaco = _farmacoRepository.GetOneOrDefaultById(item.Farmaco);
+                        if (farmaco != null)
+                        {
+                            var pcoste = farmaco.PrecioUnicoEntrada.HasValue && farmaco.PrecioUnicoEntrada != 0
+                                ? (decimal)farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
+                                : ((decimal?)farmaco.PrecioMedio ?? 0m) * _factorCentecimal;
+
+                            var codigoBarra = _barraRepository.GetOneByFarmacoId(farmaco.Id);
+                            var proveedor = _proveedorRepository.GetOneOrDefaultByCodigoNacional(farmaco.Id);
+
+                            var categoria = farmaco.CategoriaId.HasValue
+                                ? _categoriaRepository.GetOneOrDefaultById(farmaco.CategoriaId.Value)
+                                : null;
+
+                            var subcategoria = farmaco.CategoriaId.HasValue && farmaco.SubcategoriaId.HasValue
+                                ? _categoriaRepository.GetSubcategoriaOneOrDefaultByKey(
+                                    farmaco.CategoriaId.Value,
+                                    farmaco.SubcategoriaId.Value)
+                                : null;
+
+                            var familia = _familiaRepository.GetOneOrDefaultById(farmaco.Familia);
+                            var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio);
+
+                            ventaDetalle.Farmaco = new Farmaco
+                            {
+                                Id = farmaco.Id,
+                                Codigo = item.Farmaco.ToString(),
+                                PrecioCoste = pcoste,
+                                CodigoBarras = codigoBarra,
+                                Proveedor = proveedor,
+                                Categoria = categoria,
+                                Subcategoria = subcategoria,
+                                Familia = familia,
+                                Laboratorio = laboratorio,
+                                Denominacion = farmaco.Denominacion
+                            };
+                        }
+                        else ventaDetalle.Farmaco = new Farmaco { Id = item.Farmaco, Codigo = item.Farmaco.ToString() };
+
+                        detalle.Add(ventaDetalle);
                     }
-                    else ventaDetalle.Farmaco = new Farmaco { Id = item.Farmaco, Codigo = item.Farmaco.ToString() };
 
-                    detalle.Add(ventaDetalle);
+                    return detalle;
                 }
-
-                return detalle;
             }
+            catch (FarmaciaContextException)
+            {
+                return new List<VentaDetalle>();
+            }            
         }
 
         public Ticket GetOneOrDefaultTicketByVentaId(long venta)

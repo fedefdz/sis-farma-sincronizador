@@ -103,6 +103,14 @@
       <Project>{3D6C7586-ECDE-4051-8DC0-BD512BC653BC}</Project>
       <Name>Sisfarma.Sincronizador.Unycop.Domain.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sisfarma.Sincronizador.Unycop.Infrastructure\Sisfarma.Sincronizador.Unycop.Infrastructure.csproj">
+      <Project>{D21CF482-E9C4-437C-A311-D459730F96D1}</Project>
+      <Name>Sisfarma.Sincronizador.Unycop.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sisfarma.Sincronizador.Unycop.IoC\Sisfarma.Sincronizador.Unycop.IoC.csproj">
+      <Project>{2D532790-603F-41AF-B830-66AEE06DD4BF}</Project>
+      <Name>Sisfarma.Sincronizador.Unycop.IoC</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fisiotes\" />

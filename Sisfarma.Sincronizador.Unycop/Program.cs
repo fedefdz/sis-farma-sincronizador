@@ -1,21 +1,17 @@
 ﻿using Microsoft.Win32;
 using Sisfarma.ClickOnce;
-using Sisfarma.RestClient.RestSharp;
 using Sisfarma.Sincronizador.Core.Config;
-using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Infrastructure.Fisiotes;
 using Sisfarma.Sincronizador.Unycop.Domain.Core.Factories;
-using Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
+using Sisfarma.Sincronizador.Unycop.IoC.Factories;
 using Sisfarma.Sincronizador.Unycop.Properties;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Deployment.Application;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,25 +32,26 @@ namespace Sisfarma.Sincronizador.Unycop
 
             RegisterStartup(Globals.ProductName);
             var clickOnce = new ClickOnceHelper(Globals.PublisherName, Globals.ProductName);
-            clickOnce.UpdateUninstallParameters();
+            clickOnce.UpdateUninstallParameters();            
 
-            string
-                _remoteServer = string.Empty,
-                _remoteToken = string.Empty;
+            Initialize();
 
-            //LeerFicherosConfiguracion(ref _remoteServer, ref _remoteToken);
-
-            //RemoteConfig.Setup(_remoteServer, _remoteToken);
             //LocalConfig.Setup(GetConnexionLocal());
 
-            Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
-                farmacia: FarmaciaFactory.Create(),
-                fisiotes: SisfarmaFactory.Create())
-                    .SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            SincronizadorTaskManager.TaskSincronizadores
+                //.AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create()),
+                //        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create())
+                            .SetHorarioVaciemientos("1500","2300"),
+                        delay: 1);            
 
-            //Task.Factory.StartNew(() => new PowerSwitchProgramado(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
-            //Task.Factory.StartNew(() => new PowerSwitchManual(FisiotesFactory.New()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
-            //Task.Factory.StartNew(() => new UpdateVersionSincronizador().SincronizarAsync(new CancellationToken(), delayLoop: 200));
+            Task.Factory.StartNew(() => new PowerSwitchProgramado(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            Task.Factory.StartNew(() => new PowerSwitchManual(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            Task.Factory.StartNew(() => new UpdateVersionSincronizador().SincronizarAsync(new CancellationToken(), delayLoop: 20000));
 
             var notifyIcon = new NotifyIcon();
             notifyIcon.ContextMenuStrip = GetSincronizadorMenuStrip();
@@ -83,9 +80,7 @@ namespace Sisfarma.Sincronizador.Unycop
             return cms;
         }
 
-        private static void LeerFicherosConfiguracion(
-            ref string _remoteServer,
-            ref string _remoteToken)
+        private static void Initialize()
         {
             try
             {
@@ -93,8 +88,16 @@ namespace Sisfarma.Sincronizador.Unycop
 
                 var path = ConfigurationManager.AppSettings["File.Remote.Server"];
                 var stream = new StreamReader(Path.Combine(dir, path));
-                _remoteServer = stream.ReadLine();
-                _remoteToken = stream.ReadLine();
+                var remoteServer = stream.ReadLine();
+                var remoteToken = stream.ReadLine();
+                SisfarmaFactory.Setup(remoteServer, remoteToken);
+
+                path = ConfigurationManager.AppSettings["File.Local.Server"];
+                stream = new StreamReader(Path.Combine(dir, path));
+                var accessPath = stream.ReadLine();
+                var accessPassword = stream.ReadLine();
+                FarmaciaContext.Setup(accessPath, accessPassword);
+
             }
             catch (IOException)
             {

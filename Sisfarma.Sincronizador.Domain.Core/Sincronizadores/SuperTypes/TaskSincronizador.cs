@@ -23,7 +23,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
             {
                 if (_configuracionPredefinida == null)
                     _configuracionPredefinida = new ConfiguracionDictionary(
-                        _fisiotes.Configuraciones.GetEstadosActuales()
+                        _sisfarma.Configuraciones.GetEstadosActuales()
                             .ToDictionary(k => k.campo, v => v.valor));
 
                 return _configuracionPredefinida;

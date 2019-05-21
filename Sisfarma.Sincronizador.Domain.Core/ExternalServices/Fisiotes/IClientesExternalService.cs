@@ -27,5 +27,9 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         void Sincronizar(FAR.Cliente cliente, bool cargarPuntos = false);
 
         void Sincronizar(FAR.Cliente cliente, bool beBlue, bool cargarPuntos = false);
+
+        void SincronizarHueco(FAR.Cliente cliente, bool cargarPuntos = false);
+
+        void SincronizarHueco(FAR.Cliente cliente, bool beBlue, bool cargarPuntos = false);
     }
 }

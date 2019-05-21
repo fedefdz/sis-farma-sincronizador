@@ -11,10 +11,10 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
 {
     public abstract class BaseSincronizador : Sincronizador, ISincronizadorAsync
     {
-        protected ISisfarmaService _fisiotes;
+        protected ISisfarmaService _sisfarma;
 
-        public BaseSincronizador(ISisfarmaService fisiotes)
-            => _fisiotes = fisiotes ?? throw new ArgumentNullException(nameof(fisiotes));
+        public BaseSincronizador(ISisfarmaService sisfarma)
+            => _sisfarma = sisfarma ?? throw new ArgumentNullException(nameof(sisfarma));
 
         public override async Task SincronizarAsync(CancellationToken cancellationToken = default(CancellationToken), int delayLoop = 200)
         {
@@ -66,13 +66,13 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
             {
                 var hash = Cryptographer.GenerateMd5Hash(message);
 
-                var logsPrevios = _fisiotes.Configuraciones.GetByCampo(Configuracion.FIELD_LOG_ERRORS);
+                var logsPrevios = _sisfarma.Configuraciones.GetByCampo(Configuracion.FIELD_LOG_ERRORS);
                 if (logsPrevios.Contains(hash))
                     return;
 
                 var log = $@"$log{{{hash}}}{Environment.NewLine}{DateTime.UtcNow.ToString("o")}{Environment.NewLine}{message}";
                 var logs = $@"{logsPrevios}{Environment.NewLine}{log}";
-                _fisiotes.Configuraciones.Update(Configuracion.FIELD_LOG_ERRORS, logs);
+                _sisfarma.Configuraciones.Update(Configuracion.FIELD_LOG_ERRORS, logs);
             }
             catch (Exception)
             {

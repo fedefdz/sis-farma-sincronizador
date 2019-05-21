@@ -1,21 +1,14 @@
 ﻿using Sisfarma.Sincronizador.Core.Config;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
 {
     public class FarmaciaContext : DbContext
-    {
-        private static int _anioActual = 0;
-        private static readonly string _pattern = @"Hst????.accdb";
-        private static ICollection<int> _historicos;
-
+    {        
         public FarmaciaContext(string server, string database, string username, string password)
             : base($@"Provider = Microsoft.ACE.OLEDB.12.0; Data Source = {database};Jet OLEDB:Database Password = {password};")
         { }
@@ -28,20 +21,36 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
             return new FarmaciaContext(config.Server, config.Database, config.Username, config.Password);
         }
 
-        public static FarmaciaContext Default()
+        private static readonly string _pattern = @"Hst????.accdb";
+        private static readonly string _server = "";
+        private static readonly string _username = "";
+
+        private static int _anioActual = 0;
+        private static ICollection<int> _historicos;
+        private static string _path = "";
+        private static string _password = "";
+
+        public static void Setup(string path, string password)
         {
-            return new FarmaciaContext(
-                server: "", 
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Tablas.accdb", 
-                username: "", 
-                password: "BIGOTES");
+            if (string.IsNullOrWhiteSpace(path))
+                throw new System.ArgumentException("message", nameof(path));
+
+            _path = path;
+            _password = password ?? throw new System.ArgumentNullException(nameof(password));
         }
+
+
+        public static FarmaciaContext Default()
+            => new FarmaciaContext(
+                server: _server,
+                database: $@"{_path}\Tablas.accdb",
+                username: "",
+                password: _password);
 
         public static FarmaciaContext Ventas(int year)
         {
             _anioActual = year;
             return Ventas();
-
         }
 
         public static FarmaciaContext Ventas()
@@ -54,26 +63,26 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
             if (_historicos.Contains(_anioActual))
             {
                 return new FarmaciaContext(
-                    server: "",
-                    database: $@"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Hst{_anioActual}.accdb",
-                    username: "",
-                    password: "BIGOTES");
+                    server: _server,
+                    database: $@"{_path}\Hst{_anioActual}.accdb",
+                    username: _username,
+                    password: _password);
             }
 
 
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Ventas.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\Ventas.accdb",
+                username: _username,
+                password: _password);
         }
 
-        static ICollection<int> GetHistoricos()
+        private static ICollection<int> GetHistoricos()
         {
             if (_historicos == null)
             {
                 var historicos = Directory.GetFiles(
-                path: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+                path: $@"{_path}",
                 searchPattern: _pattern,
                 searchOption: SearchOption.TopDirectoryOnly)
                     .Select(path => new string(path.Replace(".accdb", string.Empty).TakeLast(4).ToArray()))
@@ -84,66 +93,66 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
             }
 
             return _historicos;
-            
+
         }
 
         public static FarmaciaContext Clientes()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Clientes.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\Clientes.accdb",
+                username: _username,
+                password: _password);
         }
 
         public static FarmaciaContext Fidelizacion()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Fidelizacion.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\Fidelizacion.accdb",
+                username: _username,
+                password: _password);
         }
 
         public static FarmaciaContext Vendedor()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Vendedor.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\Vendedor.accdb",
+                username: _username,
+                password: _password);
         }
 
         public static FarmaciaContext Farmacos()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Farmacos.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\Farmacos.accdb",
+                username: _username,
+                password: _password);
         }
 
         public static FarmaciaContext Recepcion()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\FarmaDen.accdb",
-                username: "",
-                password: "BIGOTES");
+                server: _server,
+                database: $@"{_path}\FarmaDen.accdb",
+                username: _username,
+                password: _password);
         }
 
         public static FarmaciaContext Proveedores()
         {
             return new FarmaciaContext(
-                server: "",
-                database: @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP\Proveedo.accdb",
-                username: "",
-                password: "BIGOTES");
-        }        
+                server: _server,
+                database: $@"{_path}\Proveedo.accdb",
+                username: _username,
+                password: _password);
+        }
     }
 
     [Serializable]
-    internal class FarmaciaContextException : Exception
+    public class FarmaciaContextException : Exception
     {
         public FarmaciaContextException()
         {

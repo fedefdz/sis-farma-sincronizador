@@ -11,7 +11,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
 
         T GetAuxiliarById<T>(string cliente) where T : ClienteAux;
 
-        List<Cliente> GetGreatThanId(int id);
+        List<Cliente> GetGreatThanId(long id);
 
         Cliente GetOneOrDefaultById(long id);
 

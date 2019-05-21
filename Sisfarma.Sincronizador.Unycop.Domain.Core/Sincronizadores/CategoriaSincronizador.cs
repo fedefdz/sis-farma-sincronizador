@@ -38,7 +38,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 var subcategorias = _farmacia.Categorias.GetAllNombreSubcategoriaByCategoriaId(categoria.Id);
                 if (!subcategorias.Any())
                 {
-                    _fisiotes.Categorias.Insert(new Categoria
+                    _sisfarma.Categorias.Insert(new Categoria
                     {
                         categoria = categoria.Nombre,
                         padre = PADRE_DEFAULT,
@@ -50,7 +50,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
                 foreach (var nombre in subcategorias)
                 {
-                    _fisiotes.Categorias.Insert(new Categoria
+                    _sisfarma.Categorias.Insert(new Categoria
                     {
                         categoria = nombre,
                         padre = categoria.Nombre,

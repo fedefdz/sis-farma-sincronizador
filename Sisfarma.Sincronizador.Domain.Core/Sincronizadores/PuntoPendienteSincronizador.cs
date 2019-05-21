@@ -29,7 +29,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         {
             _perteneceFarmazul = bool.Parse(ConfiguracionPredefinida[Configuracion.FIELD_ES_FARMAZUL]);
             _puntosDeSisfarma = ConfiguracionPredefinida[Configuracion.FIELD_PUNTOS_SISFARMA];
-            _cargarPuntos = ConfiguracionPredefinida[Configuracion.FIELD_CARGAR_PUNTOS];
+            _cargarPuntos = ConfiguracionPredefinida[Configuracion.FIELD_CARGAR_PUNTOS] ?? "no";
             _fechaDePuntos = ConfiguracionPredefinida[Configuracion.FIELD_FECHA_PUNTOS];
             _soloPuntosConTarjeta = ConfiguracionPredefinida[Configuracion.FIELD_SOLO_PUNTOS_CON_TARJETA];
             _canjeoPuntos = ConfiguracionPredefinida[Configuracion.FIELD_CANJEO_PUNTOS];
@@ -38,8 +38,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         }
 
         public override void PreSincronizacion()
-        {
-            //_ultimaVenta = _fisiotes.PuntosPendientes.GetUltimaVenta();
+        {            
+            _ultimaVenta = _sisfarma.PuntosPendientes.GetUltimaVenta();
         }
 
         public override void Process()

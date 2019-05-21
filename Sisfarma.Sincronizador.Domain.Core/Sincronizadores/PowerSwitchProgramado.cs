@@ -16,8 +16,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 
         private void ProcessPowerSwitch()
         {
-            var encedido = _fisiotes.Programacion.GetProgramacionOrDefault(Programacion.Encendido);
-            var apagado = _fisiotes.Programacion.GetProgramacionOrDefault(Programacion.Apagado);
+            var encedido = _sisfarma.Programacion.GetProgramacionOrDefault(Programacion.Encendido);
+            var apagado = _sisfarma.Programacion.GetProgramacionOrDefault(Programacion.Apagado);
 
             if (encedido == null || apagado == null)
                 return;
@@ -37,13 +37,13 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         protected override void Encender()
         {
             base.Encender();
-            _fisiotes.Configuraciones.Update(FIELD_ENCENDIDO, Programacion.Encendido);
+            _sisfarma.Configuraciones.Update(FIELD_ENCENDIDO, Programacion.Encendido);
         }
 
         protected override void Apagar()
         {
             base.Apagar();
-            _fisiotes.Configuraciones.Update(FIELD_ENCENDIDO, Programacion.Apagado);
+            _sisfarma.Configuraciones.Update(FIELD_ENCENDIDO, Programacion.Apagado);
         }
         
 

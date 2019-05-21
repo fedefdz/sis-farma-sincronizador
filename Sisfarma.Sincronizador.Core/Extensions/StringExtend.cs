@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Sisfarma.Sincronizador.Core.Extensions
@@ -7,7 +9,7 @@ namespace Sisfarma.Sincronizador.Core.Extensions
     public static class StringExtension
     {
         public static string Strip(this string word) => word != null
-                ? Regex.Replace(word.Trim(), @"[.',\-\\]", string.Empty)
+                ? StripExtended(Regex.Replace(word.Trim(), @"[.',\-\\]", string.Empty))
                 : string.Empty;
         
         public static int ToIntegerOrDefault(this string @this, int @default = 0)
@@ -41,6 +43,17 @@ namespace Sisfarma.Sincronizador.Core.Extensions
                 return fecha;
 
             return default(DateTime);
-        }        
+        }               
+
+        static string StripExtended(string arg)
+        {
+            StringBuilder buffer = new StringBuilder(arg.Length);
+            foreach (char ch in arg)
+            {
+                UInt16 num = Convert.ToUInt16(ch);                
+                if ((num >= 32u) && (num <= 126u)) buffer.Append(ch);
+            }
+            return buffer.ToString();
+        }
     }
 }

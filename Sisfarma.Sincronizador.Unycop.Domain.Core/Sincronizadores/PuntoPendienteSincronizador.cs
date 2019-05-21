@@ -2,6 +2,7 @@
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,12 +37,17 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 : TIPO_CLASIFICACION_DEFAULT;            
         }
 
+        public override void PreSincronizacion()
+        {
+            base.PreSincronizacion();            
+        }
+
         public override void Process()
         {
-            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : 2016;//_anioInicio;
+            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : _anioInicio;
                 
-            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);
-
+            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);            
+            
             foreach (var venta in ventas)
             {
                 Task.Delay(5).Wait();
@@ -50,11 +56,11 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 if (venta.HasCliente())
                     InsertOrUpdateCliente(venta.Cliente);
 
-                //var puntosPendientes = GenerarPuntosPendientes(venta);
-                //foreach (var puntoPendiente in puntosPendientes)
-                //{
-                //    _fisiotes.PuntosPendientes.Insert(puntoPendiente);
-                //}
+                var puntosPendientes = GenerarPuntosPendientes(venta);
+                foreach (var puntoPendiente in puntosPendientes)
+                {
+                    _sisfarma.PuntosPendientes.Sincronizar(puntoPendiente);
+                }
 
                 _ultimaVenta = venta.Id;
             }
@@ -177,9 +183,9 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             if (_perteneceFarmazul)
             {                
                 var beBlue = _farmacia.Clientes.EsBeBlue($"{cliente.Id}");
-                _fisiotes.Clientes.Sincronizar(cliente, beBlue, debeCargarPuntos);                
+                _sisfarma.Clientes.Sincronizar(cliente, beBlue, debeCargarPuntos);                
             }
-            else _fisiotes.Clientes.Sincronizar(cliente, debeCargarPuntos);            
+            else _sisfarma.Clientes.Sincronizar(cliente, debeCargarPuntos);            
         }        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Sisfarma.RestClient;
+using Sisfarma.RestClient.Exceptions;
 using Sisfarma.Sincronizador.Core.Extensions;
 using Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
@@ -52,7 +53,22 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
 
         public long GetUltimaVenta()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _restClient
+                    .Resource(_config.Puntos.GetUltimaVenta)
+                    .SendGet<IdVentaResponse>()
+                        .idventa ?? 1L;
+            }
+            catch (RestClientNotFoundException)
+            {
+                return 1L;
+            }
+        }
+
+        internal class IdVentaResponse
+        {
+            public long? idventa { get; set; }
         }
 
         public IEnumerable<PuntosPendientes> GetWithoutRedencion()
@@ -106,10 +122,19 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 superFamilia = pp.SuperFamilia,
                 pvp = pp.PVP,
                 puc = pp.PUC,
+                categoria = pp.Categoria,
+                subcategoria = pp.Subcategoria,
+                sistema = pp.Sistema,
                 dtoLinea = pp.LineaDescuento,
                 dtoVenta = pp.VentaDescuento,
-                redencion = pp.redencion,
-                recetaPendiente = pp.recetaPendiente
+                actualizado = "1",
+                numTicket = pp.TicketNumero ?? -1,
+                serie = pp.Serie,
+                superFamiliaAux = pp.SuperFamiliaAux,
+                familiaAux = pp.FamiliaAux,
+                cambioClasificacion = pp.CambioClasificacion,
+                //redencion = pp.redencion,
+                //recetaPendiente = pp.recetaPendiente
             };
 
             var where = new { idventa = pp.VentaId, idnlinea = pp.LineaNumero };

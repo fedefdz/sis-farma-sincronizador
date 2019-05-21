@@ -1,13 +1,7 @@
 ﻿using Sisfarma.Sincronizador.Domain.Core.Services;
-using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
+namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
 {
     public static class FarmaciaFactory
     {

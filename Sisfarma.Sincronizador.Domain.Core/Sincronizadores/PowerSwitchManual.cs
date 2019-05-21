@@ -14,7 +14,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 
         private void ProcessPowerSwitch()
         {
-            var estadoActual = _fisiotes.Configuraciones
+            var estadoActual = _sisfarma.Configuraciones
                 .GetByCampo(FIELD_ENCENDIDO)
                     .ToLower()
                     .Trim();

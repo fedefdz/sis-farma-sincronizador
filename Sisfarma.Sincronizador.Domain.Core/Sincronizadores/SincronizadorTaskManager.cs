@@ -2,16 +2,18 @@
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 {
-    public class SincronizadorTaskManager
+    public static class SincronizadorTaskManager
     {
         public static ConcurrentBag<Task> CurrentTasks;
         public static CancellationTokenSource TokenSource;
+        public static List<KeyValuePair<TaskSincronizador, int>> TaskSincronizadores { get; set; } = new List<KeyValuePair<TaskSincronizador, int>>();
 
         // milisegundos
         private static readonly int _delayCategoria = 3600000;
@@ -33,67 +35,26 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         private static readonly int _delayProveedoresHistorico = 300000;
         private static readonly int _delayRecetaPendiente = 60000;
 
-        private static ConcurrentBag<Task> CreateConcurrentTasks()
+        public static ConcurrentBag<Task> CreateConcurrentTasks()
         {
             DisposeTasks();
 
             TokenSource = new CancellationTokenSource();
             var cancellationToken = TokenSource.Token;
 
-            var listaDeCompra = LocalConfig.GetSingletonInstance().ListaDeCompras;
+            //var listaDeCompra = LocalConfig.GetSingletonInstance().ListaDeCompras;
 
-            CurrentTasks = new ConcurrentBag<Task>
-            {
-                //RunTask(new ClienteSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayClientes),
+            var tasks = TaskSincronizadores.Select(t => RunTask(t.Key, cancellationToken, t.Value));
 
-                //RunTask(new HuecoSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayClientesHuecos),
-
-                //RunTask(new PuntoPendienteSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayPuntosPendiente),
-
-                //RunTask(new SinonimoSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delaySinomimos),
-
-                //RunTask(new PedidoSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayPedidos),
-
-                //RunTask(new ProductoCriticoSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayProductosCriticos),
-
-                //RunTask(new FamiliaSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayFamilia),
-
-                //RunTask(new RecetaPendienteActualizacionSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayRecetaPendiente),
-
-                ////RunTask(new EntregaClienteActualizacionSincronizador(FarmaticFactory.New(), FisiotesFactory.New()), cancellationToken),
-
-                //RunTask(new ProductoBorradoActualizacionSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayProductosBorrar),
-
-                ////RunTask(new PuntoPendienteActualizacionSincronizador(FarmaticFactory.New(), FisiotesFactory.New()), cancellationToken),
-
-                //RunTask(new ControlSinStockSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayControlStock),
-
-                //RunTask(new ControlStockSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayControlStock),
-
-                //RunTask(new ControlStockFechaEntradaSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayControlStockFechas),
-
-                //RunTask(new ControlStockFechaSalidaSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayControlStockFechas),
-
-                //RunTask(new EncargoSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService()), cancellationToken, _delayEncargos),
-
-                //RunTask(new CategoriaSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayCategoria),
-
-                //RunTask(new ListaSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayListas),
-
-                ////RunTask(new ListaTiendaSincronizador(FarmaticFactory.New(), FisiotesFactory.New(), new ConsejoService(), listaDeCompra), cancellationToken),
-
-                ////RunTask(new ListaFechaSincronizador(FarmaticFactory.New(), FisiotesFactory.New(), listaDeCompra), cancellationToken),
-
-                //RunTask(new VentaMensualActualizacionSincronizador(FarmaciaFactory.New(), FisiotesFactory.New(), new ConsejoService(), listaDeCompra), cancellationToken, _delayVentaMensual),
-
-                //RunTask(new EncargoActualizacionSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayEncargosActualizar),
-
-                //RunTask(new ProveedorHistorialSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayProveedoresHistorico),
-
-                //RunTask(new ProveedorSincronizador(FarmaciaFactory.New(), FisiotesFactory.New()), cancellationToken, _delayProveedores)
-            };
+            CurrentTasks = new ConcurrentBag<Task>(tasks);
 
             return CurrentTasks;
+        }
+
+        public static List<KeyValuePair<T, int>> AddSincronizador<T>(this List<KeyValuePair<T, int>> @this,  T sincronizador, int delay) where T : TaskSincronizador
+        {
+            @this.Add(new KeyValuePair<T, int>(sincronizador, delay));
+            return @this;
         }
 
         private static void DisposeTasks()
@@ -149,5 +110,5 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         public static Task RunTask<T>(T sincronizador, CancellationToken cancellationToken, int delayLoop = 60000)
             where T : BaseSincronizador
             => Task.Run(() => sincronizador.SincronizarAsync(cancellationToken, delayLoop), cancellationToken);
-    }
+    }    
 }

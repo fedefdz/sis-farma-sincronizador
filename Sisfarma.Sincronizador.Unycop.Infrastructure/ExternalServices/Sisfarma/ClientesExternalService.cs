@@ -62,13 +62,38 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
 
         public void ResetDniTracking()
         {
-            throw new NotImplementedException();
+            _restClient
+                .Resource(_config.Clientes.ResetDniTracking)
+                .SendPut();
         }
 
         public void Sincronizar(FAR.Cliente cliente, bool cargarPuntos = false)
         {
             var resource = _config.Clientes.Insert.Replace("{dni}", $"{cliente.Id}");
+            Sincronizar(cliente, cargarPuntos, resource);
+        }
 
+        public void Sincronizar(FAR.Cliente cliente, bool beBlue, bool cargarPuntos = false)
+        {
+            var resource = _config.Clientes.Insert.Replace("{dni}", $"{cliente.Id}");
+            Sincronizar(cliente, beBlue, cargarPuntos, resource);
+        }
+
+        public void SincronizarHueco(FAR.Cliente cliente, bool cargarPuntos = false)
+        {
+            var resource = _config.Clientes.InsertHueco.Replace("{dni}", $"{cliente.Id}");
+            Sincronizar(cliente, cargarPuntos, resource);
+        }
+
+        public void SincronizarHueco(FAR.Cliente cliente, bool beBlue, bool cargarPuntos = false)
+        {
+            var resource = _config.Clientes.InsertHueco.Replace("{dni}", $"{cliente.Id}");
+            Sincronizar(cliente, beBlue, cargarPuntos, resource);
+        }
+
+
+        private void Sincronizar(FAR.Cliente cliente, bool cargarPuntos, string resource)
+        {
             var clienteToSend = (cargarPuntos) ?
                 GenerarAnonymousClientePuntuado(cliente) :
                 GenerarAnonymousClienteSinPuntuar(cliente);
@@ -78,10 +103,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 .SendPut(clienteToSend);
         }
 
-        public void Sincronizar(FAR.Cliente cliente, bool beBlue, bool cargarPuntos = false)
+        private void Sincronizar(FAR.Cliente cliente, bool beBlue, bool cargarPuntos, string resource)
         {
-            var resource = _config.Clientes.Insert.Replace("{dni}", $"{cliente.Id}");
-
             var clienteToSend = (cargarPuntos) ?
                 GenerarAnonymousClientePuntuado(cliente, beBlue) :
                 GenerarAnonymousClienteSinPuntuar(cliente, beBlue);
@@ -100,7 +123,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 dniCliente = cliente.NumeroIdentificacion,
                 apellidos = cliente.NombreCompleto,
                 telefono = cliente.Telefono,
-                direccion = cliente.Direccion,
+                direccion = cliente.Direccion.Strip(),
                 movil = cliente.Celular,
                 email = cliente.Email,
                 fecha_nacimiento = cliente.FechaNacimiento.ToDateInteger(),
@@ -122,7 +145,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 dniCliente = cliente.NumeroIdentificacion,
                 apellidos = cliente.NombreCompleto,
                 telefono = cliente.Telefono,
-                direccion = cliente.Direccion,
+                direccion = cliente.Direccion.Strip(),
                 movil = cliente.Celular,
                 email = cliente.Email,
                 fecha_nacimiento = cliente.FechaNacimiento.ToDateInteger(),
@@ -145,7 +168,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 dniCliente = cliente.NumeroIdentificacion,
                 apellidos = cliente.NombreCompleto,
                 telefono = cliente.Telefono,
-                direccion = cliente.Direccion,
+                direccion = cliente.Direccion.Strip(),
                 movil = cliente.Celular,
                 email = cliente.Email,
                 fecha_nacimiento = cliente.FechaNacimiento.ToDateInteger(),                
@@ -166,7 +189,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 dniCliente = cliente.NumeroIdentificacion,
                 apellidos = cliente.NombreCompleto,
                 telefono = cliente.Telefono,
-                direccion = cliente.Direccion,
+                direccion = cliente.Direccion.Strip(),
                 movil = cliente.Celular,
                 email = cliente.Email,
                 fecha_nacimiento = cliente.FechaNacimiento.ToDateInteger(),
