@@ -43,11 +43,15 @@ namespace Sisfarma.Sincronizador.Unycop
                 //        farmacia: FarmaciaFactory.Create(),
                 //        fisiotes: SisfarmaFactory.Create()),
                 //        delay: 1)
-                .AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
+                //.AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create())
+                //            .SetHorarioVaciemientos("1500","2300"),
+                //        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.HuecoSincronizador(
                         farmacia: FarmaciaFactory.Create(),
-                        fisiotes: SisfarmaFactory.Create())
-                            .SetHorarioVaciemientos("1500","2300"),
-                        delay: 1);            
+                        fisiotes: SisfarmaFactory.Create()),
+                        delay: 1);
 
             Task.Factory.StartNew(() => new PowerSwitchProgramado(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             Task.Factory.StartNew(() => new PowerSwitchManual(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));

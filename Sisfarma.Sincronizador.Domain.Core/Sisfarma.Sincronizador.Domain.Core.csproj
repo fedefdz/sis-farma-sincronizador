@@ -71,6 +71,7 @@
     <Compile Include="Services\FarmaciaService.cs" />
     <Compile Include="Services\SisfarmaService.cs" />
     <Compile Include="Sincronizadores\CategoriaSincronizador.cs" />
+    <Compile Include="Sincronizadores\HuecoSincronizador.cs" />
     <Compile Include="Sincronizadores\PowerSwitchManual.cs" />
     <Compile Include="Sincronizadores\PowerSwitchProgramado.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />
