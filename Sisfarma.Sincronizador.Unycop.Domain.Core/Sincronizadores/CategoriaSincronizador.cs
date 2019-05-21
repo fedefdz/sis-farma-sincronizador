@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
-using System.Linq;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
@@ -14,20 +13,20 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void Process()
         {
-            //var familias = _farmacia.Familias.GetByDescripcion();
-            //foreach (var familia in familias)
-            //{
-            //    Task.Delay(5).Wait();
-            //    _cancellationToken.ThrowIfCancellationRequested();
+            var familias = _farmacia.Familias.GetByDescripcion();
+            foreach (var familia in familias)
+            {
+                Task.Delay(5).Wait();
+                _cancellationToken.ThrowIfCancellationRequested();
 
-            //    _fisiotes.Categorias.Insert(new Categoria
-            //    {
-            //        categoria = familia.Nombre,
-            //        padre = PADRE_DEFAULT,
-            //        prestashopPadreId = null,
-            //        tipo = "Familia"
-            //    });
-            //}
+                _sisfarma.Categorias.Sincronizar(new Categoria
+                {
+                    categoria = familia.Nombre,
+                    padre = PADRE_DEFAULT,
+                    prestashopPadreId = null,
+                    tipo = "Familia"
+                });
+            }
 
             var categorias = _farmacia.Categorias.GetByDescripcion();
             foreach (var categoria in categorias)
@@ -35,29 +34,30 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 Task.Delay(5).Wait();
                 _cancellationToken.ThrowIfCancellationRequested();
 
-                var subcategorias = _farmacia.Categorias.GetAllNombreSubcategoriaByCategoriaId(categoria.Id);
-                if (!subcategorias.Any())
+
+                if (!categoria.HasSubcategorias())
                 {
-                    _sisfarma.Categorias.Insert(new Categoria
+                    _sisfarma.Categorias.Sincronizar(new Categoria
                     {
                         categoria = categoria.Nombre,
                         padre = PADRE_DEFAULT,
                         prestashopPadreId = null,
                         tipo = "Categoria"
                     });
-                    continue;
                 }
-
-                foreach (var nombre in subcategorias)
+                else
                 {
-                    _sisfarma.Categorias.Insert(new Categoria
+                    foreach (var nombre in categoria.Subcategorias)
                     {
-                        categoria = nombre,
-                        padre = categoria.Nombre,
-                        prestashopPadreId = null,
-                        tipo = "Categoria"
-                    });
-                }                
+                        _sisfarma.Categorias.Sincronizar(new Categoria
+                        {
+                            categoria = nombre,
+                            padre = categoria.Nombre,
+                            prestashopPadreId = null,
+                            tipo = "Categoria"
+                        });
+                    }
+                }                                
             }
         }
     }

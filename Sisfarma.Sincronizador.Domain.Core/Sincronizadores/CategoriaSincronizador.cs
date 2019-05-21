@@ -27,7 +27,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
                 var padre = _farmacia.Categorias.GetSubCategoriaById($"{categoria.Id}") 
                     ?? PADRE_DEFAULT;
                                                 
-                _sisfarma.Categorias.Insert(new Categoria
+                _sisfarma.Categorias.Sincronizar(new Categoria
                 {
                     categoria = categoria.Nombre.Strip(),
                     padre = padre.Strip(),

@@ -39,20 +39,25 @@ namespace Sisfarma.Sincronizador.Unycop
             //LocalConfig.Setup(GetConnexionLocal());
 
             SincronizadorTaskManager.TaskSincronizadores
-                //.AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
-                //        farmacia: FarmaciaFactory.Create(),
-                //        fisiotes: SisfarmaFactory.Create()),
-                //        delay: 1)
-                //.AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
-                //        farmacia: FarmaciaFactory.Create(),
-                //        fisiotes: SisfarmaFactory.Create())
-                //            .SetHorarioVaciemientos("1500","2300"),
-                //        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create())
+                            .SetHorarioVaciemientos("1500", "2300"),
+                        delay: 1)
                 .AddSincronizador(new Domain.Core.Sincronizadores.HuecoSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.CategoriaSincronizador(
                         farmacia: FarmaciaFactory.Create(),
                         fisiotes: SisfarmaFactory.Create()),
                         delay: 1);
 
+            //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.CategoriaSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             Task.Factory.StartNew(() => new PowerSwitchProgramado(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             Task.Factory.StartNew(() => new PowerSwitchManual(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
             Task.Factory.StartNew(() => new UpdateVersionSincronizador().SincronizarAsync(new CancellationToken(), delayLoop: 20000));

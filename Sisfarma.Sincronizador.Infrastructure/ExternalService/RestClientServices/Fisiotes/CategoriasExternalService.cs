@@ -48,7 +48,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             }
         }
 
-        public void Insert(Categoria cc)
+        public void Sincronizar(Categoria cc)
         {
             var categoria = new
             {

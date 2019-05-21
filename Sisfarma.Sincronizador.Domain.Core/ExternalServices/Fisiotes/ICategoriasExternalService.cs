@@ -10,6 +10,6 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
 
         Categoria GetByPadreOrDefault(string padre);
 
-        void Insert(Categoria cc);
+        void Sincronizar(Categoria cc);
     }
 }

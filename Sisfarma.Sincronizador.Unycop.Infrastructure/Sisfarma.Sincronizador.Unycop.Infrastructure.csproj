@@ -60,6 +60,7 @@
     <Compile Include="Repositories\Farmacia\ClientesRepository.cs" />
     <Compile Include="Repositories\Farmacia\CodigoBarraRepository.cs" />
     <Compile Include="Repositories\Farmacia\DestinatariosRepository.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\Categoria.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Cliente.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Farmaco.cs" />
     <Compile Include="Repositories\Farmacia\DTO\LineaVenta.cs" />
