@@ -5,7 +5,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
 {
     public interface ICategoriasRepository
     {
-        IEnumerable<Categoria> Get();
+        IEnumerable<Categoria> GetAll();
 
         IEnumerable<Categoria> GetByDescripcion();
 

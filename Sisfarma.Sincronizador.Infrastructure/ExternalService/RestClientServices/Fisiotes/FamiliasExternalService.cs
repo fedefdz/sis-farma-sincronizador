@@ -62,6 +62,11 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             {
                 return 0m;
             }
-        }        
+        }
+
+        public void Sincronizar(string nombre, string tipo = null)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

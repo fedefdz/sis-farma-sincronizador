@@ -20,6 +20,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var programacion = new INF.ProgramacionExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var categorias = new INF.CategoriasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var encargos = new EncargosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var familias = new FamiliasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var medicamentos = new MedicamentosExternalServices(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var faltas = new FaltasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
 
@@ -31,6 +32,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
                 medicamentos: medicamentos,
                 categorias: categorias,
                 encargos: encargos,
+                familias: familias,
                 faltas: faltas,
                 programacion: programacion);
         }

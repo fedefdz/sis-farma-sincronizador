@@ -49,6 +49,7 @@
     <Compile Include="Sincronizadores\ControlSinStockSincronizador.cs" />
     <Compile Include="Sincronizadores\ControlStockSincronizador.cs" />
     <Compile Include="Sincronizadores\EncargoSincronizador.cs" />
+    <Compile Include="Sincronizadores\FamiliaSincronizador.cs" />
     <Compile Include="Sincronizadores\HuecoSincronizador.cs" />
     <Compile Include="Sincronizadores\ProductoCriticoSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />

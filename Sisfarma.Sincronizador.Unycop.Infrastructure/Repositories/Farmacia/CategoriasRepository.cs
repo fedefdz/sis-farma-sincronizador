@@ -27,11 +27,11 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             }
         }
 
-        public IEnumerable<Categoria> Get()
+        public IEnumerable<Categoria> GetAll()
         {
             using (var db = FarmaciaContext.Default())
             {
-                var sql = "select * from familia";
+                var sql = "select top 3 Nombre from categorias";
                 return db.Database.SqlQuery<Categoria>(sql)
                     .ToList();
             }

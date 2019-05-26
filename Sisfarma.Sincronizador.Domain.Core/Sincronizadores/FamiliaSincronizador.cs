@@ -1,41 +1,15 @@
-﻿using Sisfarma.Sincronizador.Extensions;
-using Sisfarma.Sincronizador.Farmatic;
-using Sisfarma.Sincronizador.Fisiotes;
-using Sisfarma.Sincronizador.Fisiotes.Models;
-using Sisfarma.Sincronizador.Sincronizadores.SuperTypes;
-using System.Threading.Tasks;
+﻿using Sisfarma.Sincronizador.Domain.Core.Services;
+using Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes;
+using System;
 
 namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 {
     public class FamiliaSincronizador : TaskSincronizador
     {
-        public FamiliaSincronizador(FarmaciaService farmatic, FisiotesService fisiotes) 
-            : base(farmatic, fisiotes)
-        {
-        }
+        public FamiliaSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
+            : base(farmacia, fisiotes)
+        { }
 
-        public override void Process() => ProcessFamilia(_farmatic, _fisiotes);
-
-        private void ProcessFamilia(FarmaciaService farmatic, FisiotesService fisiotes)
-        {
-            var familias = farmatic.Familias.Get();
-            foreach (var familia in familias)
-            {
-                Task.Delay(5);
-
-                _cancellationToken.ThrowIfCancellationRequested();
-
-                //if (!fisiotes.Familias.Exists(familia.Descripcion))
-                fisiotes.Familias.Insert(GenerarFamilia(familia.Descripcion.Strip()));
-            }
-        }
-
-        private Familia GenerarFamilia(string familia)
-        {
-            return new Familia
-            {
-                familia = familia,
-            };
-        }
+        public override void Process() => throw new NotImplementedException();        
     }
 }

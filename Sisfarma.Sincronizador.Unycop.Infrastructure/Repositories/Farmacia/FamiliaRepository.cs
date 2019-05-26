@@ -17,9 +17,14 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public FamiliaRepository() { }
 
-        public IEnumerable<Familia> Get()
+        public IEnumerable<Familia> GetAll()
         {
-            throw new NotImplementedException();
+            using (var db = FarmaciaContext.Default())
+            {
+                var sql = @"select top 3 Nombre from familias";
+                return db.Database.SqlQuery<Familia>(sql)
+                    .ToList();
+            }            
         }
 
         public IEnumerable<Familia> GetByDescripcion()

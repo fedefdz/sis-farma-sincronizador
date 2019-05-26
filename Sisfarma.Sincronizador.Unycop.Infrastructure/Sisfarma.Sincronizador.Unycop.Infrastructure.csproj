@@ -55,6 +55,7 @@
     <Compile Include="ExternalServices\Sisfarma\ClientesExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\EncargosExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\FaltasExternalService.cs" />
+    <Compile Include="ExternalServices\Sisfarma\FamiliasExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\MedicamentosExternalServices.cs" />
     <Compile Include="ExternalServices\Sisfarma\PuntosPendientesExternalService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Repositories\Farmacia\ProveedoresRepository.cs" />
     <Compile Include="Repositories\Farmacia\RecepcionRespository.cs" />
     <Compile Include="Repositories\Farmacia\SinonimosRepository.cs" />
+    <Compile Include="Repositories\Farmacia\SubcategoriaRepository.cs" />
     <Compile Include="Repositories\Farmacia\VendedoresRepository.cs" />
     <Compile Include="Repositories\Farmacia\VentasPremiumRepository.cs" />
     <Compile Include="Repositories\Farmacia\VentasRepository.cs" />
