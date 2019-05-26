@@ -7,7 +7,7 @@ using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
-    public class ControlFechaSalidaSincronizador : DC.ControlStockFechaSalidaSincronizador
+    public class ControlStockFechaSalidaSincronizador : DC.ControlStockFechaSalidaSincronizador
     {
         private const string FAMILIA_DEFAULT = "<Sin Clasificar>";
         private const string LABORATORIO_DEFAULT = "<Sin Laboratorio>";
@@ -17,7 +17,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         private string _clasificacion;
 
-        public ControlFechaSalidaSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
+        public ControlStockFechaSalidaSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
             : base(farmacia, fisiotes)
         { }
 

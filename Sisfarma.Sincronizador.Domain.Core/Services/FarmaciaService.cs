@@ -18,6 +18,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
         IFarmacosRepository Farmacos { get; }
 
         IPedidosRepository Pedidos { get; }
+
+        IEncargosRepository Encargos { get; }
     }
 
     public class FarmaciaService : IFarmaciaService
@@ -36,13 +38,16 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
 
         public IPedidosRepository Pedidos { get; }
 
+        public IEncargosRepository Encargos { get; }
+
         public FarmaciaService(
             ICategoriasRepository categorias,
             IFamiliaRepository familias,
             IVentasRepository ventas,
             IClientesRepository clientes,
             IFarmacosRepository farmacos,
-            IPedidosRepository pedidos)
+            IPedidosRepository pedidos,
+            IEncargosRepository encargos)
         {
             Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));
             Familias = familias ?? throw new ArgumentNullException(nameof(familias));
@@ -50,6 +55,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             Clientes = clientes ?? throw new ArgumentNullException(nameof(clientes));
             Farmacos = farmacos ?? throw new ArgumentNullException(nameof(farmacos));
             Pedidos = pedidos ?? throw new ArgumentNullException(nameof(pedidos));
+            Encargos = encargos ?? throw new ArgumentNullException(nameof(encargos));
         }        
     }
 }

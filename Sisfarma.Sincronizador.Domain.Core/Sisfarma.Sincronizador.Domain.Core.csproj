@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositories\Farmacia\IEncargosRepository.cs" />
     <Compile Include="Repositories\Farmacia\IFarmacosRepository.cs" />
     <Compile Include="Repositories\Farmacia\IPedidosRepository.cs" />
     <Compile Include="Sincronizadores\ClienteSincronizador.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Sincronizadores\ControlStockFechaEntradaSincronizador.cs" />
     <Compile Include="Sincronizadores\ControlStockFechaSalidaSincronizador.cs" />
     <Compile Include="Sincronizadores\ControlStockSincronizador.cs" />
+    <Compile Include="Sincronizadores\EncargoSincronizador.cs" />
     <Compile Include="Sincronizadores\HuecoSincronizador.cs" />
     <Compile Include="Sincronizadores\PowerSwitchManual.cs" />
     <Compile Include="Sincronizadores\PowerSwitchProgramado.cs" />

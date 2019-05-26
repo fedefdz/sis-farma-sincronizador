@@ -51,7 +51,7 @@
     <Compile Include="Farmacia\ClienteAux.cs" />
     <Compile Include="Farmacia\ClienteAuxWithSexo.cs" />
     <Compile Include="Farmacia\Models\Destinatario.cs" />
-    <Compile Include="Farmacia\Models\Encargo.cs" />
+    <Compile Include="Farmacia\Encargo.cs" />
     <Compile Include="Farmacia\Categoria.cs" />
     <Compile Include="Farmacia\Models\ItemListaArticulo.cs" />
     <Compile Include="Farmacia\Models\Laboratorio.cs" />

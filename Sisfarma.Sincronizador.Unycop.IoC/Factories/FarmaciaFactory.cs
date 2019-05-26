@@ -42,7 +42,18 @@ namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
                         farmacoRepository: new FarmacoRespository(),
                         categoriaRepository: new CategoriaRepository(),                        
                         familiaRepository: new FamiliaRepository(),
-                        laboratorioRepository: new LaboratorioRepository())
+                        laboratorioRepository: new LaboratorioRepository()),
+
+                encargos: new EncargosRepository(
+                        clientesRepository: new ClientesRepository(
+                                ventasPremium: new VentasPremiumRepository()),
+                        proveedorRepository: new ProveedoresRepository(
+                                recepcionRespository: new RecepcionRespository()),
+                        farmacoRepository: new FarmacoRespository(),
+                        categoriaRepository: new CategoriaRepository(),
+                        familiaRepository: new FamiliaRepository(),
+                        laboratorioRepository: new LaboratorioRepository(),
+                        vendedoresRepository: new VendedoresRepository())                        
             );                        
         }
     }

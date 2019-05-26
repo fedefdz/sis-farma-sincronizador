@@ -108,6 +108,11 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 {
                     bulk = new[] { encargo }
                 });
-        }        
+        }
+
+        public void Sincronizar(Encargo encargo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

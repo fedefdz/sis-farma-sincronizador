@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Data\FarmaciaContext.cs" />
     <Compile Include="ExternalServices\Sisfarma\ClientesExternalService.cs" />
+    <Compile Include="ExternalServices\Sisfarma\EncargosExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\FaltasExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\MedicamentosExternalServices.cs" />
     <Compile Include="ExternalServices\Sisfarma\PuntosPendientesExternalService.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Repositories\Farmacia\DestinatariosRepository.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Categoria.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Cliente.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\Encargo.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Farmaco.cs" />
     <Compile Include="Repositories\Farmacia\DTO\LineaVenta.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Pedido.cs" />
