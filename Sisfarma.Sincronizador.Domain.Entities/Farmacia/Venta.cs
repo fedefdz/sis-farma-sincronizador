@@ -31,37 +31,7 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
         public string Tipo { get; set; }
 
         public decimal Importe { get; set; }
-
-        //public string Usuario { get; set; }
-
-        //public string Maquina { get; set; }
-
-        //public string TipoVenta { get; set; }
-
-        //public double TotalBase { get; set; }
-
-        //public double TotalCuota { get; set; }
-
-        //public double TotalRecargo { get; set; }
-
-        //public double TotalVentaBruta { get; set; }
-
-        //public double? DescuentoLinea { get; set; }
-
-        //public double? DescuentoOpera { get; set; }
-
-        //public double TotalVenta { get; set; }
-
-        //public string RecetaPendiente { get; set; }
-
-        //public string Facturada { get; set; }
-
-        //public string NumeroDoc { get; set; }
-
-        //public int? IdContador { get; set; }
-
-        //public int? Empresa { get; set; }
-
+        
         public Ticket Ticket { get; set; }
 
         public ICollection<VentaDetalle> Detalle { get; set; }

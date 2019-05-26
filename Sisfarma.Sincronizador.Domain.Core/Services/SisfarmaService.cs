@@ -68,7 +68,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             ICategoriasExternalService categorias, 
             //IEncargosExternalService encargos, 
             //IFamiliasExternalService familias, 
-            //IFaltasExternalService faltas, 
+            IFaltasExternalService faltas, 
             //IProveedoresExternalService proveedores, 
             IProgramacionExternalService programacion)
         {
@@ -84,7 +84,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));
             //Encargos = encargos ?? throw new ArgumentNullException(nameof(encargos));
             //Familias = familias ?? throw new ArgumentNullException(nameof(familias));
-            //Faltas = faltas ?? throw new ArgumentNullException(nameof(faltas));
+            Faltas = faltas ?? throw new ArgumentNullException(nameof(faltas));
             //Proveedores = proveedores ?? throw new ArgumentNullException(nameof(proveedores));
             Programacion = programacion ?? throw new ArgumentNullException(nameof(programacion));
         }

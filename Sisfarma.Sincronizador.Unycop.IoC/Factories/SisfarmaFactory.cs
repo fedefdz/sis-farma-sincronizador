@@ -20,6 +20,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var programacion = new INF.ProgramacionExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var categorias = new INF.CategoriasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var medicamentos = new MedicamentosExternalServices(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var faltas = new FaltasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
 
             return new SisfarmaService(
                 clientes: clientes,
@@ -28,6 +29,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
                 configuraciones: configuraciones,
                 medicamentos: medicamentos,
                 categorias: categorias,
+                faltas: faltas,
                 programacion: programacion);
         }
 

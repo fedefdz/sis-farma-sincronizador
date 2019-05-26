@@ -53,7 +53,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             var idInteger = (int)id;
             using (var db = FarmaciaContext.Farmacos())
             {
-                var sql = @"SELECT ID_Farmaco as Id, Denominacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, Familia, CategoriaId, SubcategoriaId, Laboratorio FROM Farmacos WHERE ID_Farmaco= @id";
+                var sql = @"SELECT ID_Farmaco as Id, Denominacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, PVP, Existencias, Familia, CategoriaId, SubcategoriaId, Laboratorio FROM Farmacos WHERE ID_Farmaco= @id";
                 return db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("id", id))
                     .FirstOrDefault();

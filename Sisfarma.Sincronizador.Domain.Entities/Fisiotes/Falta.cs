@@ -6,7 +6,7 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Fisiotes
     {
         public long cod { get; set; }
 
-        public long? idPedido { get; set; }
+        public long idPedido { get; set; }
 
         public long? idLinea { get; set; }
     

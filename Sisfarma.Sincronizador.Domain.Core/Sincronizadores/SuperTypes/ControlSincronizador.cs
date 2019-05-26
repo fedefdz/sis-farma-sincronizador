@@ -19,7 +19,6 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
                 fisiotes.Medicamentos.Update(generado);            
         }
 
-
         protected virtual bool HayDiferencias(Medicamento remoto, Medicamento generado)
         {
             return

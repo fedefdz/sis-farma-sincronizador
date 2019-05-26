@@ -74,5 +74,10 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                     bulk = new[] { falta }
                 });
         }
+
+        public void Sincronizar(Falta falta)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
