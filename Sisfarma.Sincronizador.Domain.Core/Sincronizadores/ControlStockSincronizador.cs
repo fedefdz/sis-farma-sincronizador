@@ -1,28 +1,20 @@
-﻿using Sisfarma.Sincronizador.Consejo;
-using Sisfarma.Sincronizador.Farmatic;
-using Sisfarma.Sincronizador.Fisiotes;
-using Sisfarma.Sincronizador.Fisiotes.Models;
-using Sisfarma.Sincronizador.Helpers;
-using Sisfarma.Sincronizador.Sincronizadores.SuperTypes;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Sisfarma.Sincronizador.Domain.Core.Services;
+using Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes;
+using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
 
 namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 {
     public class ControlStockSincronizador : ControlSincronizador
     {
-        private string _ultimoMedicamentoSincronizado;
+        protected string _ultimoMedicamentoSincronizado;
 
-        public ControlStockSincronizador(FarmaciaService farmatic, FisiotesService fisiotes, ConsejoService consejo)
-            : base(farmatic, fisiotes, consejo)
-        {
-        }
-
-        public override void Process() => ProcessControlStockInicial();
-
+        public ControlStockSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
+            : base(farmacia, fisiotes)
+        { }
+        
         public override void PreSincronizacion()
         {
-            var valorConfiguracion = _fisiotes.Configuraciones.GetByCampo(Configuracion.FIELD_POR_DONDE_VOY_CON_STOCK);
+            var valorConfiguracion = _sisfarma.Configuraciones.GetByCampo(Configuracion.FIELD_POR_DONDE_VOY_CON_STOCK);
 
             var codArticulo = !string.IsNullOrEmpty(valorConfiguracion)
                 ? valorConfiguracion
@@ -31,33 +23,6 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
             _ultimoMedicamentoSincronizado = codArticulo;
         }
 
-        public void ProcessControlStockInicial()
-        {            
-            var articulos = _farmatic.Articulos.GetWithStockByIdGreaterOrEqual(_ultimoMedicamentoSincronizado);
-
-            if (!articulos.Any())
-            {
-                _fisiotes.Configuraciones.Update(Configuracion.FIELD_POR_DONDE_VOY_CON_STOCK, "0");
-                _ultimoMedicamentoSincronizado = "0";
-                return;
-            }
-
-            foreach (var articulo in articulos)
-            {
-                Task.Delay(5);
-
-                _cancellationToken.ThrowIfCancellationRequested();
-
-                var medicamentoGenerado = Generator.GenerarMedicamento(_farmatic, _consejo, articulo);
-                _fisiotes.Medicamentos.Insert(medicamentoGenerado);
-                _ultimoMedicamentoSincronizado = articulo.IdArticu;
-            }
-
-            if (_farmatic.Articulos.GetControlArticuloFisrtOrDefault(articulos.Last().IdArticu) == null)
-            {
-                _fisiotes.Configuraciones.Update(Configuracion.FIELD_POR_DONDE_VOY_CON_STOCK, "0");
-                _ultimoMedicamentoSincronizado = "0";
-            }
-        }
+        public override void Process() => throw new System.NotImplementedException();        
     }
 }

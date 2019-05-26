@@ -19,12 +19,14 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var puntosPendientes = new PuntosPendientesExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var programacion = new INF.ProgramacionExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var categorias = new INF.CategoriasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var medicamentos = new MedicamentosExternalServices(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
 
             return new SisfarmaService(
                 clientes: clientes,
                 huecos: huecos,
                 puntosPendientes: puntosPendientes,
                 configuraciones: configuraciones,
+                medicamentos: medicamentos,
                 categorias: categorias,
                 programacion: programacion);
         }

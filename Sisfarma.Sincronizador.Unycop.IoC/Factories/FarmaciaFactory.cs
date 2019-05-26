@@ -6,12 +6,12 @@ namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
     public static class FarmaciaFactory
     {
         public static FarmaciaService Create()
-        {            
+        {
             return new FarmaciaService(
                 categorias: new CategoriasRepository(),
-                
+
                 familias: new FamiliaRepository(),
-                
+
                 ventas: new VentasRepository(
                         clientesRepository: new ClientesRepository(
                                 ventasPremium: new VentasPremiumRepository()),
@@ -24,9 +24,18 @@ namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
                         categoriaRepository: new CategoriaRepository(),
                         familiaRepository: new FamiliaRepository(),
                         laboratorioRepository: new LaboratorioRepository()),
-                
+
                 clientes: new ClientesRepository(
-                        ventasPremium: new VentasPremiumRepository()));
+                        ventasPremium: new VentasPremiumRepository()),
+
+                farmacos: new FarmacoRespository(
+                        categoriaRepository: new CategoriaRepository(),
+                        barraRepository: new CodigoBarraRepository(),
+                        familiaRepository: new FamiliaRepository(),
+                        laboratorioRepository: new LaboratorioRepository(),
+                        proveedorRepository: new ProveedoresRepository(
+                                recepcionRespository: new RecepcionRespository()))
+            );                        
         }
     }
 }

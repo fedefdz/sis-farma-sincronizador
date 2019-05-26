@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
 using Sisfarma.ClickOnce;
-using Sisfarma.Sincronizador.Core.Config;
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 using Sisfarma.Sincronizador.Infrastructure.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Domain.Core.Config;
 using Sisfarma.Sincronizador.Unycop.Domain.Core.Factories;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using Sisfarma.Sincronizador.Unycop.IoC.Factories;
@@ -34,33 +34,35 @@ namespace Sisfarma.Sincronizador.Unycop
             var clickOnce = new ClickOnceHelper(Globals.PublisherName, Globals.ProductName);
             clickOnce.UpdateUninstallParameters();            
 
-            Initialize();
+            Initialize();            
 
-            //LocalConfig.Setup(GetConnexionLocal());
+            //SincronizadorTaskManager.TaskSincronizadores
+                //.AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create()),
+                //        delay: 1)
+                //.AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create())
+                //            .SetHorarioVaciemientos("1500", "2300"),
+                //        delay: 1)
+                //.AddSincronizador(new Domain.Core.Sincronizadores.HuecoSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create()),
+                //        delay: 1)
+                //.AddSincronizador(new Domain.Core.Sincronizadores.CategoriaSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create()),
+                //        delay: 1)
+                //.AddSincronizador(new Domain.Core.Sincronizadores.ControlStockFechaEntradaSincronizador(
+                //        farmacia: FarmaciaFactory.Create(),
+                //        fisiotes: SisfarmaFactory.Create()),
+                //        delay: 1);
 
-            SincronizadorTaskManager.TaskSincronizadores
-                .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
-                        farmacia: FarmaciaFactory.Create(),
-                        fisiotes: SisfarmaFactory.Create()),
-                        delay: 1)
-                .AddSincronizador(new Domain.Core.Sincronizadores.ClienteSincronizador(
-                        farmacia: FarmaciaFactory.Create(),
-                        fisiotes: SisfarmaFactory.Create())
-                            .SetHorarioVaciemientos("1500", "2300"),
-                        delay: 1)
-                .AddSincronizador(new Domain.Core.Sincronizadores.HuecoSincronizador(
-                        farmacia: FarmaciaFactory.Create(),
-                        fisiotes: SisfarmaFactory.Create()),
-                        delay: 1)
-                .AddSincronizador(new Domain.Core.Sincronizadores.CategoriaSincronizador(
-                        farmacia: FarmaciaFactory.Create(),
-                        fisiotes: SisfarmaFactory.Create()),
-                        delay: 1);
-
-            //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.CategoriaSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
-            Task.Factory.StartNew(() => new PowerSwitchProgramado(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
-            Task.Factory.StartNew(() => new PowerSwitchManual(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
-            Task.Factory.StartNew(() => new UpdateVersionSincronizador().SincronizarAsync(new CancellationToken(), delayLoop: 20000));
+            Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.ControlStockFechaEntradaSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 1));
+            //Task.Factory.StartNew(() => new PowerSwitchProgramado(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            //Task.Factory.StartNew(() => new PowerSwitchManual(SisfarmaFactory.Create()).SincronizarAsync(Updater.GetCancellationToken(), delayLoop: 60000));
+            //Task.Factory.StartNew(() => new UpdateVersionSincronizador().SincronizarAsync(new CancellationToken(), delayLoop: 20000));
 
             var notifyIcon = new NotifyIcon();
             notifyIcon.ContextMenuStrip = GetSincronizadorMenuStrip();
@@ -69,7 +71,6 @@ namespace Sisfarma.Sincronizador.Unycop
             Application.ApplicationExit += ApplicationExit;
             Application.ApplicationExit += (sender, @event) => notifyIcon.Visible = false;
             Application.Run(new SincronizadorApplication());
-
 
         }
 
@@ -101,11 +102,9 @@ namespace Sisfarma.Sincronizador.Unycop
                 var remoteToken = stream.ReadLine();
                 SisfarmaFactory.Setup(remoteServer, remoteToken);
 
-                path = ConfigurationManager.AppSettings["File.Local.Server"];
-                stream = new StreamReader(Path.Combine(dir, path));
-                var accessPath = stream.ReadLine();
-                var accessPassword = stream.ReadLine();
-                FarmaciaContext.Setup(accessPath, accessPassword);
+                var local = GetConnexionLocal(remoteServer, remoteToken);
+
+                FarmaciaContext.Setup(local.pathFicheros, local.password);
 
             }
             catch (IOException)
@@ -127,25 +126,31 @@ namespace Sisfarma.Sincronizador.Unycop
             reg.SetValue(productName, location);
         }
 
-        private static ConexionLocal GetConnexionLocal()
+        private static LocalConfiguracion GetConnexionLocal(string server, string token)
         {
+            return new LocalConfiguracion
+            {
+                pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+                password = "BIGOTES",
+                marketCodeList = -1
+            };
+
             try
             {
                 var restClient = new RestClient.RestSharp.RestClient();
 
-                var remote = RemoteConfig.GetSingletonInstance();
-                var config = FisiotesConfig.TestConfig(remote.Server, remote.Token);
+                var config = FisiotesConfig.TestConfig(server, token);
 
                 var conn = restClient.BaseAddress(config.BaseAddress)
                     .UseAuthenticationBasic(config.Credentials.Token)
                     .Resource(config.Configuraciones.ConexionLocal)
-                    .SendGet<ConexionLocal>();
+                    .SendGet<LocalConfiguracion>();
 
                 return conn;
             }
             catch (Exception)
             {
-                return GetConnexionLocal();
+                return GetConnexionLocal(server, token);
             }
 
         }

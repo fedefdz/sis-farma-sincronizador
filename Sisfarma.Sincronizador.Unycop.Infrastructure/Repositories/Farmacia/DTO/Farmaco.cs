@@ -1,4 +1,6 @@
-﻿namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO
+﻿using System;
+
+namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO
 {
     public class Farmaco
     {
@@ -17,5 +19,25 @@
         public string Laboratorio { get; set; }
 
         public string Denominacion { get; set; }
+
+        public int? FechaUltimaEntrada { get; set; }
+
+        public int? FechaUltimaSalida { get; set; }
+
+        public string Ubicacion { get; set; }
+
+        public bool BolsaPlastico { get; set; }
+
+        public byte IVA { get; set; }
+
+        public int PVP { get; set; }
+
+        public short? Stock { get; set; }
+
+        public short? Existencias { get; set; }
+
+        public int FechaBaja { get; set; }
+
+        public int? FechaCaducidad { get; set; }
     }
 }

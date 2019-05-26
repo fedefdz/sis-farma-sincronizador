@@ -291,6 +291,11 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             _restClient.
                 Resource(_config.Medicamentos.Update)
                 .SendPost(new { bulk = medicamento });            
-        }        
+        }
+
+        public void Sincronizar(Medicamento medicamento)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

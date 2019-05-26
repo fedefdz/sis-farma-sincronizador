@@ -1,4 +1,6 @@
-﻿namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
+﻿using System;
+
+namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
 {
     public class Farmaco
     {
@@ -10,7 +12,9 @@
 
         public string Denominacion { get; set; }
 
-        public decimal PrecioCoste { get; set; }        
+        public decimal PrecioCoste { get; set; }
+
+        public decimal Precio { get; set; }
 
         public Familia Familia { get; set; }
 
@@ -22,6 +26,24 @@
 
         public Laboratorio Laboratorio { get; set; }
 
+        public DateTime? FechaUltimaCompra { get; set; }
+
+        public DateTime? FechaUltimaVenta { get; set; }
+
+        public DateTime? FechaCaducidad { get; set; }
+
+        public string Ubicacion { get; set; }
+
+        public bool Web { get; set; }
+
+        public int Stock { get; set; }
+
+        public int StockMinimo { get; set; }
+
+        public decimal Iva { get; set; }
+
+        public bool Baja { get; set; }
+
         public bool HasProveedor() => Proveedor != null;
 
         public bool HasCategoria() => Categoria != null;
@@ -31,5 +53,7 @@
         public bool HasFamilia() => Familia != null;
 
         public bool HasLaboratorio => Laboratorio != null;
+
+        public decimal PrecioSinIva() => Math.Round(Precio / (1 + 0.01m * Iva), 2);
     }
 }

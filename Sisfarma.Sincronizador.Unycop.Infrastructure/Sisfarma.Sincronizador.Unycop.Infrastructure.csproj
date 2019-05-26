@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Data\FarmaciaContext.cs" />
     <Compile Include="ExternalServices\Sisfarma\ClientesExternalService.cs" />
+    <Compile Include="ExternalServices\Sisfarma\MedicamentosExternalServices.cs" />
     <Compile Include="ExternalServices\Sisfarma\PuntosPendientesExternalService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Farmacia\ArticulosRepository.cs" />
