@@ -77,6 +77,30 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
                 password: _password);
         }
 
+        public static FarmaciaContext VentasByYear(int year)
+        {
+            var historicos = GetHistoricos();
+
+            if (historicos.All(x => x > _anioActual))
+                throw new FarmaciaContextException();
+
+            if (_historicos.Contains(_anioActual))
+            {
+                return new FarmaciaContext(
+                    server: _server,
+                    database: $@"{_path}\Hst{_anioActual}.accdb",
+                    username: _username,
+                    password: _password);
+            }
+
+
+            return new FarmaciaContext(
+                server: _server,
+                database: $@"{_path}\Ventas.accdb",
+                username: _username,
+                password: _password);
+        }
+
         private static ICollection<int> GetHistoricos()
         {
             if (_historicos == null)

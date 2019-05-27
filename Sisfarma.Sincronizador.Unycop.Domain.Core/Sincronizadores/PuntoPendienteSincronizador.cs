@@ -2,13 +2,11 @@
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
-using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
-using Farmacia = Sisfarma.Sincronizador.Domain.Entities.Farmacia;
+using FAR = Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
@@ -176,7 +174,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             };
         }
 
-        private void InsertOrUpdateCliente(Farmacia.Cliente cliente)
+        private void InsertOrUpdateCliente(FAR.Cliente cliente)
         {                        
             var debeCargarPuntos = _puntosDeSisfarma.ToLower().Equals("no") || string.IsNullOrWhiteSpace(_puntosDeSisfarma);
 

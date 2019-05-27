@@ -20,6 +20,16 @@
         
         public float? dtoLinea { get; set; }
 
-        public float? dtoVenta { get; set; }        
+        public float? dtoVenta { get; set; }
+
+        public string proveedor { get; set; }
+        public string cod_nacional { get; set; }
+    }
+
+    public class UpdateTicket
+    {
+        public long numTicket { get; set; }
+        public string serie { get; set; }
+        public long idventa { get; set; }
     }
 }

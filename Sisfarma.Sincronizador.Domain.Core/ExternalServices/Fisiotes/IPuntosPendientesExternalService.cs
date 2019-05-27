@@ -16,6 +16,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         decimal GetPuntosCanjeadosByDni(int dni);
         long GetUltimaVenta();
         IEnumerable<PuntosPendientes> GetWithoutRedencion();
+        IEnumerable<PuntosPendientes> GetWithoutTicket();
         void Insert(IEnumerable<PuntosPendientes> pps);
         void Insert(int venta, int linea, string codigoBarra, string codigo, string descripcion, string familia, int cantidad, decimal numero, string tipoPago, int fecha, string dni, string cargado, string puesto, string trabajador, string codLaboratorio, string laboratorio, string proveedor, string receta, DateTime fechaVenta, string superFamlia, float precioMed, float pcoste, float dtoLinea, float dtoVta, float redencion, string recetaPendiente);
         void Insert(PuntosPendientes pp);
@@ -23,7 +24,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         void Update(long venta);
         void Update(long venta, long linea, string receta = "C");
         void Update(string tipoPago, string proveedor, float? dtoLinea, float? dtoVenta, float redencion, long venta, long linea);
-        void UpdatePuntacion(UpdatePuntacion pp);
+        void Sincronizar(UpdatePuntacion pp);
+        void Sincronizar(UpdateTicket tk);
     }
 
     public interface IPuntosPendientesExternalServiceNew

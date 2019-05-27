@@ -12,5 +12,6 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
         IEnumerable<Farmaco> GetWithStockByIdGreaterOrEqual(string ultimoMedicamentoSincronizado);
         bool AnyGraterThatDoesnHaveStock(string codigo);        
         bool AnyGreaterThatHasStock(string codigo);
+        bool Exists(string codigo);
     }
 }

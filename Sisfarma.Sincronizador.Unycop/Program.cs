@@ -36,7 +36,7 @@ namespace Sisfarma.Sincronizador.Unycop
 
             Initialize();
 
-            //SincronizadorTaskManager.TaskSincronizadores
+            SincronizadorTaskManager.TaskSincronizadores
                 //.AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
                 //        farmacia: FarmaciaFactory.Create(),
                 //        fisiotes: SisfarmaFactory.Create()),
@@ -90,7 +90,15 @@ namespace Sisfarma.Sincronizador.Unycop
                 //        farmacia: FarmaciaFactory.Create(),
                 //        fisiotes: SisfarmaFactory.Create())
                 //            .SetHorarioVaciamientos("1000", "1230", "1730", "1930"), 
-                //        delay: 1);
+                //        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteActualizacionSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.TicketPendienteActualizacionSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
+                        delay: 1);
 
             Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())
                 .SetHorarioVaciamientos("1000", "1230", "1730", "1930")

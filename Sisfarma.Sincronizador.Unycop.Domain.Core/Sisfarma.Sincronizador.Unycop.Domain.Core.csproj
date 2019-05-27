@@ -52,9 +52,12 @@
     <Compile Include="Sincronizadores\FamiliaSincronizador.cs" />
     <Compile Include="Sincronizadores\HuecoSincronizador.cs" />
     <Compile Include="Sincronizadores\ListaSincronizador.cs" />
+    <Compile Include="Sincronizadores\ProductoBorradoActualizacionSincronizador.cs" />
     <Compile Include="Sincronizadores\ProductoCriticoSincronizador.cs" />
+    <Compile Include="Sincronizadores\PuntoPendienteActualizacionSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />
     <Compile Include="Sincronizadores\SinonimoSincronizador.cs" />
+    <Compile Include="Sincronizadores\TicketPendienteActualizacionSincronizador.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sisfarma.RestClient\Sisfarma.RestClient.csproj">

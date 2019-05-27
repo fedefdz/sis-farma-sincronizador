@@ -7,6 +7,7 @@ using Sisfarma.Sincronizador.Infrastructure.Fisiotes;
 using Sisfarma.Sincronizador.Infrastructure.Fisiotes.DTO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
 {
@@ -73,7 +74,34 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
 
         public IEnumerable<PuntosPendientes> GetWithoutRedencion()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _restClient
+                    .Resource(_config.Puntos.GetSinRedencion)
+                    .SendGet<IEnumerable<DTO.PuntosPendientes>>()
+                        .ToList()
+                        .Select(x => new PuntosPendientes { VentaId = x.idventa });
+            }
+            catch (RestClientNotFoundException)
+            {
+                return new List<PuntosPendientes>();
+            }
+        }
+
+        public IEnumerable<PuntosPendientes> GetWithoutTicket()
+        {
+            try
+            {
+                return _restClient
+                    .Resource(_config.Puntos.GetSinRedencion)
+                    .SendGet<IEnumerable<DTO.PuntosPendientes>>()
+                        .ToList()
+                        .Select(x => new PuntosPendientes { VentaId = x.idventa });
+            }
+            catch (RestClientNotFoundException)
+            {
+                return new List<PuntosPendientes>();
+            }
         }
 
         public void Insert(IEnumerable<PuntosPendientes> pps)
@@ -167,9 +195,61 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
             throw new NotImplementedException();
         }
 
-        public void UpdatePuntacion(UpdatePuntacion pp)
+        public void Sincronizar(UpdatePuntacion pp)
         {
-            throw new NotImplementedException();
+            if (pp.cod_nacional == null)
+            {
+                var set = new
+                {
+                    pp.tipoPago,                    
+                    actulizado = 1
+                };
+
+                var where = new { idventa = pp.idventa };
+
+                _restClient
+                   .Resource(_config.Puntos.Update)
+                   .SendPut(new
+                   {
+                       puntos = new { set, where }
+                   });
+            }
+            else
+            {
+                var set = new
+                {
+                    pp.tipoPago,
+                    pp.proveedor,
+                    actulizado = 1
+                };
+
+                var where = new { idventa = pp.idventa, cod_nacional = pp.cod_nacional };
+
+                _restClient
+                   .Resource(_config.Puntos.Update)
+                   .SendPut(new
+                   {
+                       puntos = new { set, where }
+                   });
+            }
+        }
+
+        public void Sincronizar(UpdateTicket tk)
+        {
+            var set = new
+            {
+                tk.numTicket,
+                tk.serie
+            };
+
+            var where = new { idventa = tk.idventa };
+
+            _restClient
+               .Resource(_config.Puntos.Update)
+               .SendPut(new
+               {
+                   puntos = new { set, where }
+               });
         }
     }
 }
