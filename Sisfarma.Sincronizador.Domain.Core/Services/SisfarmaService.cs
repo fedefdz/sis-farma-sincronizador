@@ -62,7 +62,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             IConfiguracionesExternalService configuraciones,
             //IEntregasExternalService entregas, 
             IMedicamentosExternalService medicamentos, 
-            //ISinonimosExternalService sinonimos, 
+            ISinonimosExternalService sinonimos, 
             //IPedidosExternalService pedidos, 
             IListasExternalService listas, 
             ICategoriasExternalService categorias, 
@@ -78,7 +78,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             Configuraciones = configuraciones ?? throw new ArgumentNullException(nameof(configuraciones));
             //Entregas = entregas ?? throw new ArgumentNullException(nameof(entregas));
             Medicamentos = medicamentos ?? throw new ArgumentNullException(nameof(medicamentos));
-            //Sinonimos = sinonimos ?? throw new ArgumentNullException(nameof(sinonimos));
+            Sinonimos = sinonimos ?? throw new ArgumentNullException(nameof(sinonimos));
             //Pedidos = pedidos ?? throw new ArgumentNullException(nameof(pedidos));
             Listas = listas ?? throw new ArgumentNullException(nameof(listas));
             Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));

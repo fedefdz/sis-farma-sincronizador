@@ -23,6 +23,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var encargos = new EncargosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var familias = new FamiliasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var medicamentos = new MedicamentosExternalServices(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var sinonimos = new INF.SinonimosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var faltas = new FaltasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
 
             return new SisfarmaService(
@@ -31,6 +32,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
                 puntosPendientes: puntosPendientes,
                 configuraciones: configuraciones,
                 medicamentos: medicamentos,
+                sinonimos: sinonimos,
                 listas: listas,
                 categorias: categorias,
                 encargos: encargos,

@@ -57,7 +57,9 @@ namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
 
                 subcategorias: new SubcategoriaRepository(),
 
-                listas: new ListaRepository()
+                listas: new ListaRepository(),
+
+                sinonimos: new SinonimosRepository()
             );                        
         }
     }

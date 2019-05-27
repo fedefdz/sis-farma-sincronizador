@@ -1,4 +1,5 @@
 ﻿using Sisfarma.RestClient;
+using Sisfarma.Sincronizador.Core.Extensions;
 using Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
 using System.Collections.Generic;
@@ -32,12 +33,12 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 .SendPut();                    
         }
 
-        public void Insert(List<Sinonimo> items)
+        public void Sincronizar(List<Sinonimo> items)
         {
             var sinonimos = items.Select(item => new
             {
-                cod_barras = item.cod_barras,
-                cod_nacional = item.cod_nacional
+                cod_barras = item.cod_barras.Strip(),
+                cod_nacional = item.cod_nacional.Strip()
             });
 
             _restClient

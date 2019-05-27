@@ -44,6 +44,7 @@
     <Compile Include="Repositories\Farmacia\IFarmacosRepository.cs" />
     <Compile Include="Repositories\Farmacia\IListaRepository.cs" />
     <Compile Include="Repositories\Farmacia\IPedidosRepository.cs" />
+    <Compile Include="Repositories\Farmacia\ISinonimosRepository.cs" />
     <Compile Include="Repositories\Farmacia\ISubcategoriaRepository.cs" />
     <Compile Include="Sincronizadores\ClienteSincronizador.cs" />
     <Compile Include="ExternalServices\Fisiotes\DTO\Clientes\UpdatePuntaje.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Sincronizadores\ProductoCriticoSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />
     <Compile Include="Sincronizadores\SincronizadorTaskManager.cs" />
+    <Compile Include="Sincronizadores\SinonimoSincronizador.cs" />
     <Compile Include="Sincronizadores\SuperTypes\BaseSincronizador.cs" />
     <Compile Include="Sincronizadores\SuperTypes\ControlSincronizador.cs" />
     <Compile Include="Sincronizadores\SuperTypes\ISincronizador.cs" />

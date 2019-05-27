@@ -54,6 +54,7 @@
     <Compile Include="Sincronizadores\ListaSincronizador.cs" />
     <Compile Include="Sincronizadores\ProductoCriticoSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />
+    <Compile Include="Sincronizadores\SinonimoSincronizador.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sisfarma.RestClient\Sisfarma.RestClient.csproj">

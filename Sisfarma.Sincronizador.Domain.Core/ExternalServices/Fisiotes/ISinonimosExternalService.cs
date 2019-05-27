@@ -6,7 +6,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
     public interface ISinonimosExternalService
     {
         void Empty();
-        void Insert(List<Sinonimo> items);
+        void Sincronizar(List<Sinonimo> items);
         bool IsEmpty();
     }
 }

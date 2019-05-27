@@ -65,6 +65,7 @@
     <Compile Include="Repositories\Farmacia\DestinatariosRepository.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Categoria.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Cliente.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\CodigoBarra.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Encargo.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Farmaco.cs" />
     <Compile Include="Repositories\Farmacia\DTO\LineaVenta.cs" />
