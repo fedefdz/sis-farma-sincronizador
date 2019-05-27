@@ -18,6 +18,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var huecos = new INF.HuecosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var puntosPendientes = new PuntosPendientesExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var programacion = new INF.ProgramacionExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var listas = new INF.ListasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var categorias = new INF.CategoriasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var encargos = new EncargosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var familias = new FamiliasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
@@ -30,6 +31,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
                 puntosPendientes: puntosPendientes,
                 configuraciones: configuraciones,
                 medicamentos: medicamentos,
+                listas: listas,
                 categorias: categorias,
                 encargos: encargos,
                 familias: familias,

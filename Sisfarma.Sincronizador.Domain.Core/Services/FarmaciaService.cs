@@ -22,6 +22,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
         IEncargosRepository Encargos { get; }
 
         ISubcategoriasRepository Subcategorias { get; }
+
+        IListaRepository Listas { get; }
     }
 
     public class FarmaciaService : IFarmaciaService
@@ -44,6 +46,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
 
         public ISubcategoriasRepository Subcategorias { get; }
 
+        public IListaRepository Listas { get; }
+
         public FarmaciaService(
             ICategoriasRepository categorias,
             IFamiliaRepository familias,
@@ -52,7 +56,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             IFarmacosRepository farmacos,
             IPedidosRepository pedidos,
             IEncargosRepository encargos,
-            ISubcategoriasRepository subcategorias)
+            ISubcategoriasRepository subcategorias,
+            IListaRepository listas)
         {
             Categorias = categorias ?? throw new ArgumentNullException(nameof(categorias));
             Familias = familias ?? throw new ArgumentNullException(nameof(familias));
@@ -62,6 +67,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Services
             Pedidos = pedidos ?? throw new ArgumentNullException(nameof(pedidos));
             Encargos = encargos ?? throw new ArgumentNullException(nameof(encargos));
             Subcategorias = subcategorias ?? throw new ArgumentNullException(nameof(subcategorias));
+            Listas = listas ?? throw new ArgumentNullException(nameof(listas));
         }        
     }
 }

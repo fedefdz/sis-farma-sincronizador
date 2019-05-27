@@ -1,5 +1,6 @@
 ﻿using Sisfarma.RestClient;
 using Sisfarma.RestClient.Exceptions;
+using Sisfarma.Sincronizador.Core.Extensions;
 using Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
 
@@ -35,12 +36,12 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             }         
         }
 
-        public void InsertOrUpdate(Lista ll)
+        public void Sincronizar(Lista ll)
         {
             var lista = new
             {
                 cod = ll.cod,
-                lista = ll.lista,
+                lista = ll.lista.Strip(),
                 porDondeVoy = 1
             };
 

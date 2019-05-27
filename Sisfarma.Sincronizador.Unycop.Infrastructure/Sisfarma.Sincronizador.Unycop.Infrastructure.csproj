@@ -78,7 +78,7 @@
     <Compile Include="Repositories\Farmacia\FarmaciaRepository.cs" />
     <Compile Include="Repositories\Farmacia\FarmacoRespository.cs" />
     <Compile Include="Repositories\Farmacia\LaboratoriosRepository.cs" />
-    <Compile Include="Repositories\Farmacia\ListasArticulosRepository.cs" />
+    <Compile Include="Repositories\Farmacia\ListaRepository.cs" />
     <Compile Include="Repositories\Farmacia\PedidosRepository.cs" />
     <Compile Include="Repositories\Farmacia\ProveedoresRepository.cs" />
     <Compile Include="Repositories\Farmacia\RecepcionRespository.cs" />

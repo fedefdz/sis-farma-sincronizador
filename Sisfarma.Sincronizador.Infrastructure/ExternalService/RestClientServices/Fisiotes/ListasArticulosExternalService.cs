@@ -19,7 +19,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 .SendPut(new { ids = new[] { codigo } });
         }
 
-        public void Insert(List<ListaArticulo> items)
+        public void Sincronizar(List<ListaArticulo> items)
         {
             var articulos = items.Select(i => new
             {
@@ -36,9 +36,9 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 });
         }
 
-        public void Insert(ListaArticulo la)
+        public void Sincronizar(ListaArticulo la)
         {
-            Insert(new List<ListaArticulo> { la });
+            Sincronizar(new List<ListaArticulo> { la });
         }        
     }
 }

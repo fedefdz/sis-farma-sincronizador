@@ -53,12 +53,11 @@
     <Compile Include="Farmacia\Models\Destinatario.cs" />
     <Compile Include="Farmacia\Encargo.cs" />
     <Compile Include="Farmacia\Categoria.cs" />
-    <Compile Include="Farmacia\Models\ItemListaArticulo.cs" />
     <Compile Include="Farmacia\Models\Laboratorio.cs" />
     <Compile Include="Farmacia\Models\LineaRecepcion.cs" />
     <Compile Include="Farmacia\LineaVentaRedencion.cs" />
     <Compile Include="Farmacia\LineaVentaVirtual.cs" />
-    <Compile Include="Farmacia\Models\ListaArticulo.cs" />
+    <Compile Include="Farmacia\Lista.cs" />
     <Compile Include="Farmacia\Pedido.cs" />
     <Compile Include="Farmacia\Models\Proveedor.cs" />
     <Compile Include="Farmacia\Models\Recepcion.cs" />

@@ -8,7 +8,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
 
         Lista GetCodPorDondeVoyOrDefault();
         Lista GetOneOrDefault(int codigo);
-        void InsertOrUpdate(Lista ll);
+        void Sincronizar(Lista ll);
         void ResetPorDondeVoy();
     }
 }
