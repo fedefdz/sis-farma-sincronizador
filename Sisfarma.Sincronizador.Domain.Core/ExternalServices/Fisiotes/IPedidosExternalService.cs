@@ -8,8 +8,8 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         bool ExistsLinea(int pedido, int linea);
         Pedido Get(int pedido);
         LineaPedido GetLineaByKey(int pedido, int linea);
-        void Insert(Pedido pp);
-        void InsertLinea(LineaPedido ll);
+        void Sincronizar(Pedido pp);
+        void Sincronizar(LineaPedido ll);
         Pedido LastOrDefault();
     }
 }

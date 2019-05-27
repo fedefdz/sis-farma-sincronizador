@@ -18,6 +18,7 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Fisiotes
         public const string FIELD_POR_DONDE_VOY_ENTREGAS_CLIENTES = "porDondeEntregasClientes";
         public const string FIELD_POR_DONDE_VOY_VENTA_MES = "porDondeVoyActualizarVentasMes";
         public const string FIELD_POR_DONDE_VOY_VENTA_MES_ID = "porDondeVoyActualizarVentasMesIdVenta";
+        public const string FIELD_POR_DONDE_VOY_PAGOS = "porDondeActualizandoPagos";
         public const string FIELD_REVISAR_VENTA_MES_DESDE = "revisarVentasDesdeMeses";
         public const string FIELD_FECHA_PUNTOS = "fechaPuntos";
         public const string FIELD_CARGAR_PUNTOS = "cargarPuntos";

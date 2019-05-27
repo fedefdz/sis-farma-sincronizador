@@ -1,10 +1,10 @@
-namespace Sisfarma.Sincronizador.Farmatic.Models
-{
-    using System;
+using System;
 
+namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
+{    
     public partial class Recepcion
     {
-        public int IdRecepcion { get; set; }
+        public int Id { get; set; }
 
         public DateTime Fecha { get; set; }
 

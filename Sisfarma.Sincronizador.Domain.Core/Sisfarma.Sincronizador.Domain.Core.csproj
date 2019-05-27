@@ -44,6 +44,7 @@
     <Compile Include="Repositories\Farmacia\IFarmacosRepository.cs" />
     <Compile Include="Repositories\Farmacia\IListaRepository.cs" />
     <Compile Include="Repositories\Farmacia\IPedidosRepository.cs" />
+    <Compile Include="Repositories\Farmacia\IRecepcionRepository.cs" />
     <Compile Include="Repositories\Farmacia\ISinonimosRepository.cs" />
     <Compile Include="Repositories\Farmacia\ISubcategoriaRepository.cs" />
     <Compile Include="Sincronizadores\ClienteSincronizador.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Sincronizadores\FamiliaSincronizador.cs" />
     <Compile Include="Sincronizadores\HuecoSincronizador.cs" />
     <Compile Include="Sincronizadores\ListaSincronizador.cs" />
+    <Compile Include="Sincronizadores\PedidoSincronizador.cs" />
     <Compile Include="Sincronizadores\PowerSwitchManual.cs" />
     <Compile Include="Sincronizadores\PowerSwitchProgramado.cs" />
     <Compile Include="Sincronizadores\ProductoBorradoActualizacionSincronizador.cs" />

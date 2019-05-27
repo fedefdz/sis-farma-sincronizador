@@ -98,6 +98,10 @@ namespace Sisfarma.Sincronizador.Unycop
                 .AddSincronizador(new Domain.Core.Sincronizadores.TicketPendienteActualizacionSincronizador(
                         farmacia: FarmaciaFactory.Create(),
                         fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.PagoPendienteActualizarSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
                         delay: 1);
 
             Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())

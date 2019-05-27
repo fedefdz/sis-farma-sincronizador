@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\FarmaciaContext.cs" />
+    <Compile Include="ExternalServices\PedidosExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\ClientesExternalService.cs" />
     <Compile Include="ExternalServices\Sisfarma\DTO\PuntosPendientes.cs" />
     <Compile Include="ExternalServices\Sisfarma\EncargosExternalService.cs" />

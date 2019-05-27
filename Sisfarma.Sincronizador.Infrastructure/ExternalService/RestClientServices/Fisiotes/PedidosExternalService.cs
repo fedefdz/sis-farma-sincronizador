@@ -46,7 +46,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             }
         }
 
-        public void Insert(Pedido pp)
+        public void Sincronizar(Pedido pp)
         {
             var pedido = new
             {
@@ -92,7 +92,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
         }
 
 
-        public void InsertLinea(LineaPedido ll)
+        public void Sincronizar(LineaPedido ll)
         {
             var linea = new
             {

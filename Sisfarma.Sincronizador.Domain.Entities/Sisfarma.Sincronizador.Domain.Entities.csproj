@@ -60,7 +60,7 @@
     <Compile Include="Farmacia\Lista.cs" />
     <Compile Include="Farmacia\Pedido.cs" />
     <Compile Include="Farmacia\Models\Proveedor.cs" />
-    <Compile Include="Farmacia\Models\Recepcion.cs" />
+    <Compile Include="Farmacia\Recepcion.cs" />
     <Compile Include="Farmacia\Models\RecepcionResume.cs" />
     <Compile Include="Farmacia\Sinonimos.cs" />
     <Compile Include="Farmacia\Models\TipoCliente.cs" />

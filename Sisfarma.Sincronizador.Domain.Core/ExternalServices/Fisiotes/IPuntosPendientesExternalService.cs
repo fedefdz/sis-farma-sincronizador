@@ -19,6 +19,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         IEnumerable<PuntosPendientes> GetWithoutTicket();
         void Insert(IEnumerable<PuntosPendientes> pps);
         void Insert(int venta, int linea, string codigoBarra, string codigo, string descripcion, string familia, int cantidad, decimal numero, string tipoPago, int fecha, string dni, string cargado, string puesto, string trabajador, string codLaboratorio, string laboratorio, string proveedor, string receta, DateTime fechaVenta, string superFamlia, float precioMed, float pcoste, float dtoLinea, float dtoVta, float redencion, string recetaPendiente);
+        bool AnyWithoutPagoGreaterThanVentaId(long ultimaVenta);
         void Insert(PuntosPendientes pp);
         void InsertPuntuacion(InsertPuntuacion pp);
         void Update(long venta);

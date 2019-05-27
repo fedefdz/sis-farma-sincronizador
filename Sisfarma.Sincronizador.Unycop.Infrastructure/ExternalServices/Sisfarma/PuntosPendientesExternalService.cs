@@ -251,5 +251,21 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                    puntos = new { set, where }
                });
         }
+
+        public bool AnyWithoutPagoGreaterThanVentaId(long ultimaVenta)
+        {
+            try
+            {
+                return _restClient
+                    .Resource(_config.Puntos.GetSinRedencion)
+                    .SendGet<IEnumerable<DTO.PuntosPendientes>>()
+                        .ToList()
+                        .Any();
+            }
+            catch (RestClientNotFoundException)
+            {
+                return false;
+            }
+        }
     }
 }
