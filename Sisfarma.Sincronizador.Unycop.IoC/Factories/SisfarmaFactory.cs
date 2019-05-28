@@ -1,5 +1,6 @@
 ﻿using System;
 using Sisfarma.Sincronizador.Domain.Core.Services;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma;
 
 using INF = Sisfarma.Sincronizador.Infrastructure.Fisiotes;
@@ -25,14 +26,16 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var medicamentos = new MedicamentosExternalServices(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var sinonimos = new INF.SinonimosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var faltas = new FaltasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
-            
+            var pedidos = new PedidosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+
             return new SisfarmaService(
                 clientes: clientes,
                 huecos: huecos,
                 puntosPendientes: puntosPendientes,
                 configuraciones: configuraciones,
                 medicamentos: medicamentos,
-                sinonimos: sinonimos,            
+                sinonimos: sinonimos,
+                pedidos: pedidos,
                 listas: listas,
                 categorias: categorias,
                 encargos: encargos,

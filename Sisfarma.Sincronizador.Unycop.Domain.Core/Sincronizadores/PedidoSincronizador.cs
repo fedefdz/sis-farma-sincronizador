@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sisfarma.Sincronizador.Domain.Core.Services;
+using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
+using FAR = Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
@@ -14,116 +17,85 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             : base(farmacia, fisiotes)
         { }
 
-        public override void Process()
-        {            
-            //var recepciones = (_lastPedido == null)
-            //    ? _farmacia.Recepciones.GetByYear(_anioInicio)
-            //    : _farmacia.Recepciones.GetByIdAndYear(_anioInicio, _lastPedido.idPedido);
-
-            //foreach (var recepcion in recepciones)
-            //{
-            //    Task.Delay(5);
-
-            //    _cancellationToken.ThrowIfCancellationRequested();
-
-            //    var resume = _farmatic.Recepciones.GetResumeById(recepcion.IdRecepcion);
-            //    if (resume.numLineas > 0)
-            //    {
-            //        //if (!_fisiotes.Pedidos.Exists(recepcion.IdRecepcion))
-            //        //{
-            //        _fisiotes.Pedidos.Insert(GenerarPedido(_farmatic, recepcion, resume));
-            //        if (_lastPedido == null)
-            //            _lastPedido = new Fisiotes.Models.Pedido();
-
-            //        _lastPedido.idPedido = recepcion.IdRecepcion;
-            //        //}
-
-            //        var lineas = _farmatic.Recepciones.GetLineasById(recepcion.IdRecepcion)
-            //                .Where(l => !string.IsNullOrEmpty(l.XArt_IdArticu));
-
-            //        foreach (var linea in lineas)
-            //        {
-            //            Task.Delay(1);
-
-            //            var articulo = _farmatic.Articulos.GetOneOrDefaultById(linea.XArt_IdArticu);
-            //            if (articulo != null /*&& !_fisiotes.Pedidos.ExistsLinea(linea.IdRecepcion, linea.IdNLinea)*/)
-            //                _fisiotes.Pedidos.InsertLinea(GenerarLineaDePedido(_farmatic, recepcion, linea, articulo, _consejo));
-            //        }
-            //    }
-            //}
+        public override void PreSincronizacion()
+        {
+            base.PreSincronizacion();
         }
 
-        //private Fisiotes.Models.LineaPedido GenerarLineaDePedido(FarmaciaService farmatic, Recepcion recepcion, LineaRecepcion linea, Articulo articulo, ConsejoService consejo)
-        //{
-        //    var puc = linea.ImportePuc;
-        //    var pvp = linea.ImportePvp;
+        public override void Process()
+        {
+            var recepciones = (_lastPedido == null)
+                ? _farmacia.Recepciones.GetAllByYear(_anioInicio)
+                : _farmacia.Recepciones.GetAllByDate(_lastPedido.fechaPedido ?? DateTime.MinValue);
 
-        //    var familia = farmatic.Familias.GetById(articulo.XFam_IdFamilia)?.Descripcion;
-        //    if (string.IsNullOrWhiteSpace(familia))
-        //        familia = FAMILIA_DEFAULT;
+            if (!recepciones.Any())
+            {
+                _anioInicio++;
+                _lastPedido = null;
+                return;
+            }
+            
 
-        //    var superFamilia = !familia.Equals(FAMILIA_DEFAULT)
-        //        ? farmatic.Familias.GetSuperFamiliaDescripcionByFamilia(familia) ?? FAMILIA_DEFAULT
-        //        : familia;
+            foreach (var recepcion in recepciones)
+            {
+                Task.Delay(5);
 
-        //    var codLaboratorio = articulo.Laboratorio ?? string.Empty;
-        //    var nombreLaboratorio = GetNombreLaboratorioFromLocalOrDefault(farmatic, consejo, codLaboratorio, LABORATORIO_DEFAULT);
+                _cancellationToken.ThrowIfCancellationRequested();
+         
+                if (recepcion.Lineas > 0)
+                {                    
+                    _sisfarma.Pedidos.Sincronizar(GenerarPedido(recepcion));
+                    if (_lastPedido == null)
+                        _lastPedido = new Pedido();
 
-        //    return new Fisiotes.Models.LineaPedido
-        //    {
-        //        idPedido = linea.IdRecepcion,
-        //        idLinea = linea.IdNLinea,
-        //        fechaPedido = recepcion.Hora,
-        //        cod_nacional = Convert.ToInt64(articulo.IdArticu.Strip()),
-        //        descripcion = articulo.Descripcion.Strip(),
-        //        familia = familia.Strip(),
-        //        superFamilia = superFamilia.Strip(),
-        //        cantidad = linea.Recibidas - linea.UDevolver,
-        //        pvp = Convert.ToSingle(pvp),
-        //        puc = Convert.ToSingle(puc),
-        //        cod_laboratorio = codLaboratorio.Strip(),
-        //        laboratorio = nombreLaboratorio.Strip()
-        //    };
-        //}
+                    _lastPedido.idPedido = recepcion.Id;                 
+                    
+                    foreach (var linea in recepcion.Detalle)
+                    {
+                        Task.Delay(1);
+                        
+                        if (linea.Farmaco != null)
+                            _sisfarma.Pedidos.Sincronizar(GenerarLineaDePedido(linea));
+                    }
+                }
+            }
+        }
 
-        //private Fisiotes.Models.Pedido GenerarPedido(FarmaciaService farmatic, Recepcion recepcion, RecepcionResume resume)
-        //{
-        //    var proveedor = farmatic.Proveedores.GetOneOrDefault(recepcion.XProv_IdProveedor)?.FIS_NOMBRE
-        //                    ?? string.Empty;
+        private LineaPedido GenerarLineaDePedido(FAR.RecepcionDetalle detalle)
+        {            
+            return new LineaPedido
+            {
+                idPedido = detalle.RecepcionId,
+                idLinea = detalle.Linea,
+                fechaPedido = detalle.Recepcion.Fecha,
+                cod_nacional = detalle.Farmaco.Id,
+                descripcion = detalle.Farmaco.Denominacion,
+                familia = detalle.Farmaco.Familia?.Nombre ?? FAMILIA_DEFAULT,
+                categoria = detalle.Farmaco.Categoria?.Nombre ?? string.Empty,
+                subcategoria = detalle.Farmaco.Subcategoria?.Nombre ?? string.Empty,
+                cantidad = detalle.Cantidad,
+                cantidadBonificada = detalle.CantidadBonificada,
+                pvp = (float) detalle.PVP,
+                puc = (float) detalle.PUC,
+                cod_laboratorio = detalle.Farmaco.Laboratorio?.Id.ToString() ?? "0",
+                laboratorio = detalle.Farmaco.Laboratorio?.Nombre ?? LABORATORIO_DEFAULT
+            };
+        }
 
-        //    var trabajador = farmatic.Vendedores.GetOneOrDefaultById(Convert.ToInt16(recepcion.XVend_IdVendedor))?.NOMBRE
-        //        ?? string.Empty;
-
-        //    return new Fisiotes.Models.Pedido
-        //    {
-        //        idPedido = recepcion.IdRecepcion,
-        //        fechaPedido = recepcion.Hora,
-        //        hora = DateTime.Now,
-        //        numLineas = resume.numLineas,
-        //        importePvp = Convert.ToSingle(resume.importePvp),
-        //        importePuc = Convert.ToSingle(resume.importePuc),
-        //        idProveedor = recepcion.XProv_IdProveedor,
-        //        proveedor = proveedor,
-        //        trabajador = trabajador
-        //    };
-        //}
-
-        //private string GetNombreLaboratorioFromLocalOrDefault(FarmaciaService farmaticService, ConsejoService consejoService, string codigo, string byDefault = "")
-        //{
-        //    var nombreLaboratorio = byDefault;
-        //    if (!string.IsNullOrEmpty(codigo?.Trim()) && !string.IsNullOrWhiteSpace(codigo))
-        //    {
-        //        var laboratorioDb = default(Consejo.Models.Labor); //consejoService.Laboratorios.Get(codigo);
-        //        if (laboratorioDb == null)
-        //        {
-        //            var laboratorioLocal =
-        //                farmaticService.Laboratorios.GetById(codigo);
-        //            nombreLaboratorio = laboratorioLocal?.Nombre ?? byDefault;
-        //        }
-        //        else nombreLaboratorio = laboratorioDb.NOMBRE;
-        //    }
-        //    else nombreLaboratorio = byDefault;
-        //    return nombreLaboratorio;
-        //}        
+        private Pedido GenerarPedido(FAR.Recepcion recepcion)
+        {            
+            return new Pedido
+            {
+                idPedido = recepcion.Id,
+                fechaPedido = recepcion.Fecha.Date,
+                hora = DateTime.Now,
+                numLineas = recepcion.Lineas,
+                importePvp = (float) recepcion.ImportePVP,
+                importePuc = (float)recepcion.ImportePUC,
+                idProveedor = recepcion.Proveedor?.Id.ToString() ?? "0",
+                proveedor = recepcion.Proveedor?.Nombre ?? string.Empty,
+                trabajador = string.Empty // no se envía trabajador
+            };
+        }        
     }
 }

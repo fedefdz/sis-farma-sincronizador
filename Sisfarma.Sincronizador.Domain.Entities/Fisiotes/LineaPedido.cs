@@ -4,6 +4,8 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Fisiotes
 
     public partial class LineaPedido
     {
+        public int cantidadBonificada;
+
         public ulong id { get; set; }
 
         public DateTime? fechaPedido { get; set; }
@@ -31,5 +33,9 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Fisiotes
         public string cod_laboratorio { get; set; }
 
         public string laboratorio { get; set; }
+
+        public string categoria { get; set; }
+
+        public string subcategoria { get; set; }
     }
 }

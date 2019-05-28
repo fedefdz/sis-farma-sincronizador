@@ -72,6 +72,7 @@
     <Compile Include="Repositories\Farmacia\DTO\Farmaco.cs" />
     <Compile Include="Repositories\Farmacia\DTO\LineaVenta.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Pedido.cs" />
+    <Compile Include="Repositories\Farmacia\DTO\Recepcion.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Ticket.cs" />
     <Compile Include="Repositories\Farmacia\DTO\Venta.cs" />
     <Compile Include="Repositories\Farmacia\DTO\VentaPremiun.cs" />

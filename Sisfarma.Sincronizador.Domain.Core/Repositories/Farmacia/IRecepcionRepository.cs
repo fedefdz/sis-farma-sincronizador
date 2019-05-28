@@ -1,12 +1,13 @@
 ﻿using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
+using System;
 using System.Collections.Generic;
 
 namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
 {
     public interface IRecepcionRepository
     {
-        IEnumerable<Recepcion> GetByYear(int anioInicio);
+        IEnumerable<Recepcion> GetAllByYear(int year);
 
-        IEnumerable<Recepcion> GetByIdAndYear(int anioInicio, long idPedido);
+        IEnumerable<Recepcion> GetAllByDate(DateTime fecha);
     }
 }

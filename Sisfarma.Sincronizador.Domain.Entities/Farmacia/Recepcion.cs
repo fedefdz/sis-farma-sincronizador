@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
 {    
@@ -22,5 +24,54 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
 
         public short? Mes { get; set; }
 
+        public Proveedor Proveedor { get; set; }
+
+
+
+        public ICollection<RecepcionDetalle> Detalle { get; set; }
+
+        public Recepcion()
+            => Detalle = new HashSet<RecepcionDetalle>();
+
+        public bool HasDetalle() => Detalle != null && Detalle.Count > 0;
+
+        public bool HasProveedor() => this.Proveedor != null;
+
+        public int Lineas { get; set; }
+
+        public decimal ImportePVP { get; set; }
+
+        public decimal ImportePUC { get; set; }
+
+        public Recepcion AddRangeDetalle(List<RecepcionDetalle> detalle)
+        {
+            foreach (var item in detalle)
+            {
+                item.Recepcion = this;
+                Detalle.Add(item);
+            }
+            return this;
+        }
+    }
+
+    public class RecepcionDetalle
+    {
+        public int Id { get; set; }
+
+        public int RecepcionId { get; set; }
+
+        public int Linea { get; set; }
+
+        public Recepcion Recepcion { get; set; }
+
+        public Farmaco Farmaco { get; set; }
+
+        public decimal PVP { get; set; }
+
+        public decimal PUC { get; set; }
+
+        public int Cantidad { get; set; }
+
+        public int CantidadBonificada { get; set; }
     }
 }

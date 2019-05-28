@@ -81,14 +81,14 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
         {
             var historicos = GetHistoricos();
 
-            if (historicos.All(x => x > _anioActual))
+            if (historicos.All(x => x > year))
                 throw new FarmaciaContextException();
 
-            if (_historicos.Contains(_anioActual))
+            if (_historicos.Contains(year))
             {
                 return new FarmaciaContext(
                     server: _server,
-                    database: $@"{_path}\Hst{_anioActual}.accdb",
+                    database: $@"{_path}\Hst{year}.accdb",
                     username: _username,
                     password: _password);
             }
@@ -158,6 +158,30 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
 
         public static FarmaciaContext Recepcion()
         {
+            return new FarmaciaContext(
+                server: _server,
+                database: $@"{_path}\FarmaDen.accdb",
+                username: _username,
+                password: _password);
+        }
+
+        public static FarmaciaContext RecepcionByYear(int year)
+        {
+            var historicos = GetHistoricos();
+
+            if (historicos.All(x => x > year))
+                throw new FarmaciaContextException();
+
+            if (_historicos.Contains(year))
+            {
+                return new FarmaciaContext(
+                    server: _server,
+                    database: $@"{_path}\Hst{year}.accdb",
+                    username: _username,
+                    password: _password);
+            }
+
+
             return new FarmaciaContext(
                 server: _server,
                 database: $@"{_path}\FarmaDen.accdb",
