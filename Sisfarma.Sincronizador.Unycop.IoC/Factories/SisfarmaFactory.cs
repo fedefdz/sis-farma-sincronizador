@@ -27,6 +27,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
             var sinonimos = new INF.SinonimosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var faltas = new FaltasExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
             var pedidos = new PedidosExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
+            var proveedores = new INF.ProveedoresExternalService(new RestClient.RestSharp.RestClient(), INF.FisiotesConfig.TestConfig(_host, _token));
 
             return new SisfarmaService(
                 clientes: clientes,
@@ -41,6 +42,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Factories
                 encargos: encargos,
                 familias: familias,
                 faltas: faltas,
+                proveedores: proveedores,
                 programacion: programacion);
         }
 

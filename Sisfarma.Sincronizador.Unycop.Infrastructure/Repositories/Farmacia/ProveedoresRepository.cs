@@ -49,7 +49,12 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
         public IEnumerable<Proveedor> GetAll()
         {
-            throw new System.NotImplementedException();
+            using (var db = FarmaciaContext.Proveedores())
+            {
+                var sql = "SELECT ID_Proveedor as Id, Nombre FROM proveedores";
+                return db.Database.SqlQuery<Proveedor>(sql)                    
+                    .ToList();
+            }            
         }          
     }
 }

@@ -28,12 +28,12 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             public DateTime? fecha { get; set; }
         }
         
-        public void Insert(Proveedor pp)
+        public void Sincronizar(Proveedor pp)
         {
             var proveedor = new
             {
                 idProveedor = pp.idProveedor,
-                nombre = pp.nombre
+                nombre = pp.nombre.Strip()
             };
 
             _restClient

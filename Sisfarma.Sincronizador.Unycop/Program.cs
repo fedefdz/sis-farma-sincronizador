@@ -106,6 +106,10 @@ namespace Sisfarma.Sincronizador.Unycop
                 .AddSincronizador(new Domain.Core.Sincronizadores.PedidoSincronizador(
                         farmacia: FarmaciaFactory.Create(),
                         fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.ProveedorSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create()),
                         delay: 1);
 
             //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())
