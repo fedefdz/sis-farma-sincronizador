@@ -56,6 +56,7 @@
     <Compile Include="Sincronizadores\PedidoSincronizador.cs" />
     <Compile Include="Sincronizadores\ProductoBorradoActualizacionSincronizador.cs" />
     <Compile Include="Sincronizadores\ProductoCriticoSincronizador.cs" />
+    <Compile Include="Sincronizadores\ProveedorHistorialSincronizador.cs" />
     <Compile Include="Sincronizadores\ProveedorSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteActualizacionSincronizador.cs" />
     <Compile Include="Sincronizadores\PuntoPendienteSincronizador.cs" />

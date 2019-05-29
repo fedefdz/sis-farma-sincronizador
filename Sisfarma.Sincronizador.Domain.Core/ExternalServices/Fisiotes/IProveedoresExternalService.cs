@@ -9,7 +9,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.ExternalServices.Fisiotes
         DateTime? GetFechaMaximaDeHistorico();
         Proveedor GetOneOrDefault(string proveedor, string nombre);
         void Sincronizar(Proveedor pp);
-        void InsertHistorico(IEnumerable<ProveedorHistorial> items);
+        void Sincronizador(IEnumerable<ProveedorHistorial> items);
         void Update(Proveedor pp);
     }
 }

@@ -187,6 +187,33 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 }.AddRangeDetalle(detalle));
             }
             return recepciones;
-        }        
+        }
+
+        public IEnumerable<DE.ProveedorHistorico> GetAllHistoricosByFecha(DateTime fecha)
+        {
+            var rs = Enumerable.Empty<DTO.ProveedorHistorico>();
+            using (var db = FarmaciaContext.RecepcionByYear(fecha.Year))
+            {
+                var sql = @"SELECT ID_Farmaco as FarmacoId, Proveedor, ID_Fecha as Fecha, PVAlb as PVAlbaran, PC FROM Recepcion WHER ID_Fecha >= #@fecha# GROUP BY ID_Farmaco, Proveedor, ID_Fecha, PVAlb, PC ORDER BY ID_Fecha DESC";
+                
+                rs = db.Database.SqlQuery<DTO.ProveedorHistorico>(sql,
+                    new OleDbParameter("fecha", fecha.ToString("MM-dd-yyyy HH:mm:ss")))
+                    .Where(r => r.Fecha.HasValue)
+                    .Where(r => r.Proveedor.HasValue)
+                    .ToList();
+            }
+
+            return rs.Select(x => new DE.ProveedorHistorico
+            {
+                Id = x.Proveedor.Value,
+                FarmacoId = x.Farmaco,                
+                Fecha = x.Fecha.Value,
+                PUC = x.PC > 0 
+                    ? x.PC * _factorCentecimal
+                    : x.PVAlbaran > 0
+                        ? x.PVAlbaran * _factorCentecimal
+                        : 0m
+            });
+        }
     }
 }

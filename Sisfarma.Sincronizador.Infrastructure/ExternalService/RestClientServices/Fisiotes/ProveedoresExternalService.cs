@@ -71,7 +71,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
             }
         }
 
-        public void InsertHistorico(IEnumerable<ProveedorHistorial> items)
+        public void Sincronizador(IEnumerable<ProveedorHistorial> items)
         {
             var historicos = items.Select(item => new
             {
