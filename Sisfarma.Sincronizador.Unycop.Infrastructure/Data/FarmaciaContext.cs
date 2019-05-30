@@ -29,14 +29,18 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
         private static ICollection<int> _historicos;
         private static string _path = "";
         private static string _password = "";
+        
+        public static int ListaDeArticulo { get; set; }
 
-        public static void Setup(string path, string password)
+        public static void Setup(string path, string password, int listaDeArticulo)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new System.ArgumentException("message", nameof(path));
 
             _path = path;
             _password = password ?? throw new System.ArgumentNullException(nameof(password));
+
+            ListaDeArticulo = listaDeArticulo;
         }
 
 

@@ -24,7 +24,21 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
 
         public bool ExistsGreatThanOrEqual(DateTime fecha)
         {
-            throw new NotImplementedException();
+            var year = fecha.Year;
+            var fechaVenta = fecha.Date.ToIsoString();
+
+            try
+            {
+                return _restClient
+                    .Resource(_config.Puntos.ExistsByFechaGreatThanOrEqual
+                        .Replace("{year}", $"{year}")
+                        .Replace("{fecha}", $"{fechaVenta})"))
+                    .SendGet<bool>();
+            }
+            catch (RestClientNotFoundException)
+            {
+                return false;
+            }
         }
 
         public long GetLastOfYear(int year)
@@ -124,7 +138,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
             throw new NotImplementedException();
         }
 
-        public void Sincronizar(PuntosPendientes pp)
+        public void Sincronizar(PuntosPendientes pp, bool calcularPuntos = false)
         {
             var set = new
             {
@@ -160,15 +174,13 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 serie = pp.Serie,
                 superFamiliaAux = pp.SuperFamiliaAux,
                 familiaAux = pp.FamiliaAux,
-                cambioClasificacion = pp.CambioClasificacion,
-                //redencion = pp.redencion,
-                //recetaPendiente = pp.recetaPendiente
+                cambioClasificacion = pp.CambioClasificacion,                
             };
 
             var where = new { idventa = pp.VentaId, idnlinea = pp.LineaNumero };
 
             _restClient
-                .Resource(_config.Puntos.Insert)
+                .Resource(calcularPuntos ? _config.Puntos.InsertActualizarVenta : _config.Puntos.Insert)
                 .SendPost(new
                 {
                     puntos = new[] { new { set, where } }

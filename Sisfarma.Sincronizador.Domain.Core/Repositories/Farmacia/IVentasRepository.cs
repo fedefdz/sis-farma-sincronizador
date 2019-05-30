@@ -7,7 +7,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
     public interface IVentasRepository
     {
         List<Venta> GetAllByIdGreaterOrEqual(int year, long value);
-        List<Venta> GetGreatThanOrEqual(long venta, DateTime fecha);
+        List<Venta> GetAllByIdGreaterOrEqual(long venta, DateTime fecha);
         List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta);
         Ticket GetOneOrDefaultTicketByVentaId(long venta);
 

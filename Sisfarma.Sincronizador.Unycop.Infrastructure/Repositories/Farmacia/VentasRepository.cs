@@ -202,6 +202,70 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             return ventas;            
         }
 
+        public List<Venta> GetAllByIdGreaterOrEqual(long id, DateTime fecha)
+        {
+            var rs = new List<DTO.Venta>();
+            try
+            {
+                using (var db = FarmaciaContext.VentasByYear(fecha.Year))
+                {
+                    var year = fecha.Year;
+                    var fechaInicial = fecha.Date.ToString("dd-MM-yyyy HH:mm:ss");
+
+                    var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM venta WHERE id_venta >= @id AND year(fecha) = @year AND fecha >= #@fechaInicial# ORDER BY id_venta ASC";
+
+                    rs = db.Database.SqlQuery<DTO.Venta>(sql,
+                        new OleDbParameter("id", (int)id),
+                        new OleDbParameter("year", year),
+                        new SqlParameter("fechaInicial", fechaInicial))
+                            .ToList();
+                }
+            }
+            catch (FarmaciaContextException)
+            {
+                return new List<Venta>();
+            }
+            
+
+            var ventas = new List<Venta>();
+            foreach (var ventaRegistrada in rs)
+            {
+                var venta = new Venta
+                {
+                    Id = ventaRegistrada.Id,
+                    Tipo = ventaRegistrada.Tipo.ToString(),
+                    FechaHora = ventaRegistrada.Fecha,
+                    Puesto = ventaRegistrada.Puesto,
+                    ClienteId = ventaRegistrada.Cliente,
+                    VendedorId = ventaRegistrada.Vendedor,
+                    TotalDescuento = ventaRegistrada.Descuento * _factorCentecimal,
+                    TotalBruto = ventaRegistrada.Pago * _factorCentecimal,
+                    Importe = ventaRegistrada.Importe * _factorCentecimal,
+                };
+
+
+                if (ventaRegistrada.Cliente > 0)
+                    venta.Cliente = _clientesRepository.GetOneOrDefaultById(ventaRegistrada.Cliente);
+
+                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaRegistrada.Id);
+                if (ticket != null)
+                {
+                    venta.Ticket = new Ticket
+                    {
+                        Numero = ticket.Numero,
+                        Serie = ticket.Serie
+                    };
+                }
+
+                venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaRegistrada.Vendedor)?.Nombre;
+                venta.Detalle = GetDetalleDeVentaByVentaId(ventaRegistrada.Id);
+
+                ventas.Add(venta);
+            }
+
+            return ventas;
+        }
+
         public List<Venta> GetVirtualesLessThanId(long venta)
         {
             using (var db = FarmaciaContext.Ventas())
@@ -225,22 +289,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     .ToList();
             }
         }        
-
-        public List<Venta> GetGreatThanOrEqual(long venta, DateTime fecha)
-        {
-            using (var db = FarmaciaContext.Ventas())
-            {
-                var year = fecha.Year;
-                var sql = "SELECT * FROM venta WHERE IdVenta >= @venta AND  ejercicio = @year AND FechaHora >= @fecha ORDER BY IdVenta ASC";
-
-                return db.Database.SqlQuery<Venta>(sql,
-                    new SqlParameter("venta", venta),
-                    new SqlParameter("year", year),
-                    new SqlParameter("fecha", fecha))
-                    .ToList();
-            }
-        }
-
+        
         public List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta)
         {
             var ventaInteger = (int)venta;

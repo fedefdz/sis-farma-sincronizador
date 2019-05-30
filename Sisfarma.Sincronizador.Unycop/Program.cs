@@ -114,6 +114,11 @@ namespace Sisfarma.Sincronizador.Unycop
                 .AddSincronizador(new Domain.Core.Sincronizadores.ProveedorHistorialSincronizador(
                         farmacia: FarmaciaFactory.Create(),
                         fisiotes: SisfarmaFactory.Create()),
+                        delay: 1)
+                .AddSincronizador(new Domain.Core.Sincronizadores.VentaMensualActualizacionSincronizador(
+                        farmacia: FarmaciaFactory.Create(),
+                        fisiotes: SisfarmaFactory.Create(),
+                        listaDeArticulo: FarmaciaContext.ListaDeArticulo),
                         delay: 1);
 
             //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())
@@ -163,7 +168,7 @@ namespace Sisfarma.Sincronizador.Unycop
 
                 var local = GetConnexionLocal(remoteServer, remoteToken);
 
-                FarmaciaContext.Setup(local.pathFicheros, local.password);
+                FarmaciaContext.Setup(local.pathFicheros, local.password, local.marketCodeList);
 
             }
             catch (IOException)

@@ -104,6 +104,7 @@
     <Compile Include="Sincronizadores\SuperTypes\TaskSincronizador.cs" />
     <Compile Include="Sincronizadores\SuperTypes\_Sincronizador.cs" />
     <Compile Include="Sincronizadores\UpdateVersionSincronizador.cs" />
+    <Compile Include="Sincronizadores\VentaMensualActualizacionSincronizador.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sisfarma.ClickOnce\Sisfarma.ClickOnce.csproj">
