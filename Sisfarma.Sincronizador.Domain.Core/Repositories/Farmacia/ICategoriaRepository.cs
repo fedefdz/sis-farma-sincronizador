@@ -7,13 +7,11 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
     {
         IEnumerable<Categoria> GetAll();
 
-        IEnumerable<Categoria> GetByDescripcion();
-
-        Categoria GetById(short id);
+        IEnumerable<Categoria> GetAllByDescripcion();
+        
 
         IEnumerable<string> GetAllNombreSubcategoriaByCategoriaId(long id);
 
-        string GetSuperFamiliaDescripcionById(short familia);
         string GetSubCategoriaById(string v);
     }
 }

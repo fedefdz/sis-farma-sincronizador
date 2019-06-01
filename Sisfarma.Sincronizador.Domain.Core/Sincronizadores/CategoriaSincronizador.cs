@@ -18,7 +18,7 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
 
         private void ProcessCategorias()
         {
-            var categorias = _farmacia.Categorias.GetByDescripcion();
+            var categorias = _farmacia.Categorias.GetAllByDescripcion();
             foreach (var categoria in categorias)
             {
                 Task.Delay(5).Wait();

@@ -119,7 +119,7 @@ namespace Sisfarma.Sincronizador.Unycop
                         farmacia: FarmaciaFactory.Create(),
                         fisiotes: SisfarmaFactory.Create(),
                         listaDeArticulo: FarmaciaContext.ListaDeArticulo),
-                        delay: 1);
+                        delay: 1);            
             
 
             //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())
@@ -195,7 +195,8 @@ namespace Sisfarma.Sincronizador.Unycop
         {
             //return new LocalConfiguracion
             //{
-            //    pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+            //    //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+            //    pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM",
             //    password = "BIGOTES",
             //    marketCodeList = -1
             //};

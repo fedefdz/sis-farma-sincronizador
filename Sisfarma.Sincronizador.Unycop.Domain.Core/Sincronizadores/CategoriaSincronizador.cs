@@ -28,7 +28,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 });
             }
 
-            var categorias = _farmacia.Categorias.GetByDescripcion();
+            var categorias = _farmacia.Categorias.GetAllByDescripcion();
             foreach (var categoria in categorias)
             {
                 Task.Delay(5).Wait();
