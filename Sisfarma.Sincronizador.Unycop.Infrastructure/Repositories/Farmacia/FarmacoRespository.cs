@@ -124,7 +124,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             using (var db = FarmaciaContext.Farmacos())
             {
-                var sql = @"select top 1 ID_Farmaco as Id WHERE ID_Farmaco > @codigo AND existencias <= 0 ORDER BY ID_Farmaco ASC";
+                var sql = @"select top 1 ID_Farmaco as Id FROM Farmacos WHERE ID_Farmaco > @codigo AND existencias <= 0 ORDER BY ID_Farmaco ASC";
                 var rs = db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("codigo", int.Parse(codigo)))
                     .FirstOrDefault();
@@ -137,7 +137,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             using (var db = FarmaciaContext.Farmacos())
             {
-                var sql = @"select top 1 ID_Farmaco as Id WHERE ID_Farmaco > @codigo AND existencias > 0 ORDER BY ID_Farmaco ASC";
+                var sql = @"select top 1 ID_Farmaco as Id FROM Farmacos WHERE ID_Farmaco > @codigo AND existencias > 0 ORDER BY ID_Farmaco ASC";
                 var rs = db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("codigo", int.Parse(codigo)))
                     .FirstOrDefault();

@@ -58,22 +58,12 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 tipo = cc.tipo
             };
 
-            try
-            {
-                _restClient
+            _restClient
                 .Resource(_config.Categorias.Insert)
                 .SendPost(new
                 {
                     categorias = new[] { categoria }
                 });
-            }
-            catch (System.Exception ex)
-            {
-
-                throw;
-            }
-
-            
         }        
     }
 }
