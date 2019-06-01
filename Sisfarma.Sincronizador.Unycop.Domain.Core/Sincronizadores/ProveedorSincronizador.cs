@@ -15,7 +15,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             base(farmacia, fisiotes)
         { }
 
-        private void ProcessProveedor()
+        public override void Process()
         {
             var proveedores = _farmacia.Proveedores.GetAll();
             foreach (var proveedor in proveedores)

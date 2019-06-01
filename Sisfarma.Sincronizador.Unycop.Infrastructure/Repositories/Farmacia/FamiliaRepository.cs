@@ -21,8 +21,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             using (var db = FarmaciaContext.Default())
             {
-                var sql = @"select top 3 Nombre from familias";
-                return db.Database.SqlQuery<Familia>(sql)
+                var sql = @"select Nombre from familias";
+                return db.Database.SqlQuery<Familia>(sql)                    
                     .ToList();
             }            
         }

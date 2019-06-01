@@ -61,10 +61,11 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             var rs = Enumerable.Empty<DTO.Encargo>();
             using (var db = FarmaciaContext.Proveedores())
             {
-                var sql = @"SELECT top 10 ID_Encargo as Id, ID_Farmaco as Farmaco, ID_Cliente as Cliente, ID_Vendedor as Vendedor, Fecha_Hora as FechaHora, Fecha_Hora_Entrega as FechaHoraEntrega, Cantidad, Observaciones From Encargos WHERE year(Fecha_Hora) >= @year AND Id_Encargo >= @encargo Order by Id_Encargo ASC";
+                var sql = @"SELECT ID_Encargo as Id, ID_Farmaco as Farmaco, ID_Cliente as Cliente, ID_Vendedor as Vendedor, Fecha_Hora as FechaHora, Fecha_Hora_Entrega as FechaHoraEntrega, Cantidad, Observaciones From Encargos WHERE year(Fecha_Hora) >= @year AND Id_Encargo >= @encargo Order by Id_Encargo ASC";
                 rs = db.Database.SqlQuery<DTO.Encargo>(sql,
                     new OleDbParameter("year", year),
                     new OleDbParameter("encargos", (int) encargo))
+                        .Take(10)
                         .ToList();
             }
             

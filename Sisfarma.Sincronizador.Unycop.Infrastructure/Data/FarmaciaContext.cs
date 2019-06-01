@@ -51,35 +51,35 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Data
                 username: "",
                 password: _password);
 
-        public static FarmaciaContext Ventas(int year)
-        {
-            _anioActual = year;
-            return Ventas();
-        }
+        //public static FarmaciaContext Ventas(int year)
+        //{
+        //    _anioActual = year;
+        //    return Ventas();
+        //}
 
-        public static FarmaciaContext Ventas()
-        {
-            _historicos = GetHistoricos();
+        //public static FarmaciaContext Ventas()
+        //{
+        //    _historicos = GetHistoricos();
 
-            if (_historicos.All(x => x > _anioActual))
-                throw new FarmaciaContextException();
+        //    if (_historicos.All(x => x > _anioActual))
+        //        throw new FarmaciaContextException();
 
-            if (_historicos.Contains(_anioActual))
-            {
-                return new FarmaciaContext(
-                    server: _server,
-                    database: $@"{_path}\Hst{_anioActual}.accdb",
-                    username: _username,
-                    password: _password);
-            }
+        //    if (_historicos.Contains(_anioActual))
+        //    {
+        //        return new FarmaciaContext(
+        //            server: _server,
+        //            database: $@"{_path}\Hst{_anioActual}.accdb",
+        //            username: _username,
+        //            password: _password);
+        //    }
 
 
-            return new FarmaciaContext(
-                server: _server,
-                database: $@"{_path}\Ventas.accdb",
-                username: _username,
-                password: _password);
-        }
+        //    return new FarmaciaContext(
+        //        server: _server,
+        //        database: $@"{_path}\Ventas.accdb",
+        //        username: _username,
+        //        password: _password);
+        //}
 
         public static FarmaciaContext VentasByYear(int year)
         {

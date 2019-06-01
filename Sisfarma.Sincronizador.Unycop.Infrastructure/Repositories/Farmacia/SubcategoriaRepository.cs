@@ -12,7 +12,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {
             using (var db = FarmaciaContext.Default())
             {
-                var sql = "select top 3 Nombre from subcategorias";
+                var sql = "select Nombre from subcategorias";
                 return db.Database.SqlQuery<Subcategoria>(sql)
                     .ToList();
             }

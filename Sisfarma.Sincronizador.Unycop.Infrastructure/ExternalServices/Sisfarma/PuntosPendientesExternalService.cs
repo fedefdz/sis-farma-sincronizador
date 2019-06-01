@@ -214,7 +214,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 var set = new
                 {
                     pp.tipoPago,                    
-                    actulizado = 1
+                    actualizado = 1
                 };
 
                 var where = new { idventa = pp.idventa };
@@ -232,7 +232,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 {
                     pp.tipoPago,
                     pp.proveedor,
-                    actulizado = 1
+                    actualizado = 1
                 };
 
                 var where = new { idventa = pp.idventa, cod_nacional = pp.cod_nacional };

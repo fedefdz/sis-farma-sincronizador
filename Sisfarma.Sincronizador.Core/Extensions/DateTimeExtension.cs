@@ -7,7 +7,7 @@ namespace Sisfarma.Sincronizador.Core.Extensions
         public static string ToIsoString(this DateTime? @this)
             => @this.HasValue
                 ? @this.Value.ToIsoString()
-                : null;
+                : DateTime.MinValue.ToIsoString();
 
         public static string ToIsoString(this DateTime @this)
             => @this.ToString("yyyy-MM-ddTHH:mm:ss");

@@ -3,6 +3,7 @@ using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,13 +26,17 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         protected string _soloPuntosConTarjeta;
         protected string _canjeoPuntos;
 
-        private string _clasificacion;        
+        private string _clasificacion;
+
+        private ICollection<int> _aniosProcesados;
 
         private long _ultimaVenta;
 
         public PagoPendienteActualizarSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
             : base(farmacia, fisiotes)
-        { }
+        {
+            _aniosProcesados = new HashSet<int>();
+        }
 
         public override void LoadConfiguration()
         {
@@ -55,7 +60,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 ? valorConfiguracion.ToLongOrDefault()
                 : 20130L;
 
-            _ultimaVenta = venta;
+            _ultimaVenta = venta;            
         }
 
         public override void Process()
@@ -64,19 +69,33 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             {
                 var year = int.Parse($"{_ultimaVenta}".Substring(0, 4));
                 var ventaId = int.Parse($"{_ultimaVenta}".Substring(4));
+                
+                _aniosProcesados.Add(year);
 
                 var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(year, ventaId);
-                foreach (var venta in ventas)
-                {
-                    _cancellationToken.ThrowIfCancellationRequested();
 
-                    var puntosPendientes = GenerarPuntosPendientes(venta);
-                    foreach (var puntoPendiente in puntosPendientes)
-                    {                        
-                        _sisfarma.PuntosPendientes.Sincronizar(puntoPendiente);                        
-                        _ultimaVenta = puntoPendiente.VentaId;
+                if (ventas.Any())
+                {
+                    foreach (var venta in ventas)
+                    {
+                        _cancellationToken.ThrowIfCancellationRequested();
+
+                        var puntosPendientes = GenerarPuntosPendientes(venta);
+                        foreach (var puntoPendiente in puntosPendientes)
+                        {
+                            _sisfarma.PuntosPendientes.Sincronizar(puntoPendiente);
+                            _ultimaVenta = puntoPendiente.VentaId;
+                        }
                     }
                 }
+                else
+                {
+                    if (year < DateTime.Now.Year)
+                    {
+                        year++;
+                        _ultimaVenta = $"{year}{0}".ToLongOrDefault();
+                    }
+                }                                
             }            
         }
 

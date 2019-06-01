@@ -8,13 +8,13 @@ namespace Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia
     {
         List<Venta> GetAllByIdGreaterOrEqual(int year, long value);
         List<Venta> GetAllByIdGreaterOrEqual(long venta, DateTime fecha);
-        List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta);
+        //List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta);
         Ticket GetOneOrDefaultTicketByVentaId(long venta);
 
-        List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta);
-        VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea);
+        //List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta);
+        //VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea);
         Venta GetOneOrDefaultById(long venta);
-        LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea);
-        List<Venta> GetVirtualesLessThanId(long venta);
+        //LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea);
+        //List<Venta> GetVirtualesLessThanId(long venta);
     }
 }

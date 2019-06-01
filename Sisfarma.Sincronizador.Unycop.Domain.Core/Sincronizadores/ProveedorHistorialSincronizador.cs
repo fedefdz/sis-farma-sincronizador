@@ -13,7 +13,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             : base(farmacia, fisiotes)
         { }
 
-        private void ProcessProveedorHistorial()
+        public override void Process()
         {
             // _fechaMax se carga en PreSincronizador()
             var histricos = _farmacia.Recepciones.GetAllHistoricosByFecha(_fechaMax);

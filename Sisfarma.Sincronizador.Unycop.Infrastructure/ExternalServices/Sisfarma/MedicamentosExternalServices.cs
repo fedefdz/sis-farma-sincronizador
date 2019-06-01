@@ -107,6 +107,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
             _restClient.
                 Resource(_config.Medicamentos.Insert)
                 .SendPost(new { bulk = medicamento });
+
         }
 
         public void Update(Medicamento mm, bool withSqlExtra = false)

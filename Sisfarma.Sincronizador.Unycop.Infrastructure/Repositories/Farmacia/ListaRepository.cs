@@ -19,9 +19,10 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         {            
             using (var db = FarmaciaContext.Proveedores())
             {
-                var sql = @"SELECT top 5 ID_Bolsa as Id, Descripcion FROM DescrBolsas WHERE id_bolsa > @id";
+                var sql = @"SELECT ID_Bolsa as Id, Descripcion FROM DescrBolsas WHERE id_bolsa > @id";
                 var rs = db.Database.SqlQuery<Lista>(sql,
                     new OleDbParameter("id", id))
+                    .Take(10)
                     .ToList();
 
                 foreach (var item in rs)

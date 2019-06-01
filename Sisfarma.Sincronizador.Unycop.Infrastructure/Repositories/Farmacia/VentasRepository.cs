@@ -1,5 +1,4 @@
 ﻿using Sisfarma.Sincronizador.Core.Config;
-using Sisfarma.Sincronizador.Core.Extensions;
 using Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
-using DTO = Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO;
 
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 {
@@ -70,17 +68,17 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             _vendedoresRepository = vendedoresRepository ?? throw new ArgumentNullException(nameof(vendedoresRepository));
         }
 
-        public VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea)
-        {
-            using (var db = FarmaciaContext.Ventas())
-            {
-                var sql = @"SELECT * FROM lineaventa WHERE IdVenta = @venta AND IdNLinea = @linea";
-                return db.Database.SqlQuery<VentaDetalle>(sql,
-                    new SqlParameter("venta", venta),
-                    new SqlParameter("linea", linea))
-                    .FirstOrDefault();
-            }
-        }
+        //public VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea)
+        //{
+        //    using (var db = FarmaciaContext.Ventas())
+        //    {
+        //        var sql = @"SELECT * FROM lineaventa WHERE IdVenta = @venta AND IdNLinea = @linea";
+        //        return db.Database.SqlQuery<VentaDetalle>(sql,
+        //            new SqlParameter("venta", venta),
+        //            new SqlParameter("linea", linea))
+        //            .FirstOrDefault();
+        //    }
+        //}
 
         public Venta GetOneOrDefaultById(long id)
         {
@@ -123,7 +121,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             if (ventaAccess.Cliente > 0)
                 venta.Cliente = _clientesRepository.GetOneOrDefaultById(ventaAccess.Cliente);
 
-            var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id);
+            var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id, year);
             if (ticket != null)
             {
                 venta.Ticket = new Ticket
@@ -134,7 +132,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             }
 
             venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaAccess.Vendedor)?.Nombre;
-            venta.Detalle = GetDetalleDeVentaByVentaId(ventaAccess.Id);
+            venta.Detalle = GetDetalleDeVentaByVentaId(year, ventaAccess.Id);
 
             return venta;
         }
@@ -147,7 +145,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
             try
             {
-                using (var db = FarmaciaContext.Ventas(year))
+                using (var db = FarmaciaContext.VentasByYear(year))
                 {
                     var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
 
@@ -183,7 +181,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 if (ventaAccess.Cliente > 0)
                         venta.Cliente =_clientesRepository.GetOneOrDefaultById(ventaAccess.Cliente);
                     
-                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id);
+                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaAccess.Id, year);
                 if (ticket != null)
                 {
                     venta.Ticket = new Ticket
@@ -194,7 +192,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 }
 
                 venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaAccess.Vendedor)?.Nombre;
-                venta.Detalle = GetDetalleDeVentaByVentaId(ventaAccess.Id);
+                venta.Detalle = GetDetalleDeVentaByVentaId(year, ventaAccess.Id);
 
                 ventas.Add(venta);
             }
@@ -203,7 +201,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         }
 
         public List<Venta> GetAllByIdGreaterOrEqual(long id, DateTime fecha)
-        {
+        {            
             var rs = new List<DTO.Venta>();
             try
             {
@@ -212,12 +210,12 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     var year = fecha.Year;
                     var fechaInicial = fecha.Date.ToString("dd-MM-yyyy HH:mm:ss");
 
-                    var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM venta WHERE id_venta >= @id AND year(fecha) = @year AND fecha >= #@fechaInicial# ORDER BY id_venta ASC";
+                    var sql = $@"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE id_venta >= @id AND year(fecha) = @year AND fecha >= #{fechaInicial}# ORDER BY id_venta ASC";
 
                     rs = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("id", (int)id),
-                        new OleDbParameter("year", year),
-                        new SqlParameter("fechaInicial", fechaInicial))
+                        new OleDbParameter("year", year))
+                            .Take(10)
                             .ToList();
                 }
             }
@@ -247,7 +245,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 if (ventaRegistrada.Cliente > 0)
                     venta.Cliente = _clientesRepository.GetOneOrDefaultById(ventaRegistrada.Cliente);
 
-                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaRegistrada.Id);
+                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(ventaRegistrada.Id, fecha.Year);
                 if (ticket != null)
                 {
                     venta.Ticket = new Ticket
@@ -258,7 +256,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 }
 
                 venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(ventaRegistrada.Vendedor)?.Nombre;
-                venta.Detalle = GetDetalleDeVentaByVentaId(ventaRegistrada.Id);
+                venta.Detalle = GetDetalleDeVentaByVentaId(fecha.Year, ventaRegistrada.Id);
 
                 ventas.Add(venta);
             }
@@ -266,37 +264,37 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             return ventas;
         }
 
-        public List<Venta> GetVirtualesLessThanId(long venta)
-        {
-            using (var db = FarmaciaContext.Ventas())
-            {
-                var sql = @"SELECT v.* FROM venta v INNER JOIN lineaventavirtual lvv ON lvv.idventa = v.idventa AND (lvv.codigo = 'Pago' OR lvv.codigo = 'A Cuenta') " +
-                    @"WHERE v.ejercicio >= 2015 AND v.IdVenta < @venta ORDER BY v.IdVenta DESC";
-                return db.Database.SqlQuery<Venta>(sql,
-                    new SqlParameter("venta", venta))
-                    .ToList();
-            }
-        }
+        //public List<Venta> GetVirtualesLessThanId(long venta)
+        //{
+        //    using (var db = FarmaciaContext.Ventas())
+        //    {
+        //        var sql = @"SELECT v.* FROM venta v INNER JOIN lineaventavirtual lvv ON lvv.idventa = v.idventa AND (lvv.codigo = 'Pago' OR lvv.codigo = 'A Cuenta') " +
+        //            @"WHERE v.ejercicio >= 2015 AND v.IdVenta < @venta ORDER BY v.IdVenta DESC";
+        //        return db.Database.SqlQuery<Venta>(sql,
+        //            new SqlParameter("venta", venta))
+        //            .ToList();
+        //    }
+        //}
 
-        public List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta)
-        {
-            using (var db = FarmaciaContext.Ventas())
-            {
-                var sql =
-                @"SELECT * FROM lineaventavirtual WHERE IdVenta = @venta AND (codigo = 'Pago' OR codigo = 'A Cuenta')";
-                return db.Database.SqlQuery<LineaVentaVirtual>(sql,
-                    new SqlParameter("venta", venta))
-                    .ToList();
-            }
-        }        
+        //public List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta)
+        //{
+        //    using (var db = FarmaciaContext.Ventas())
+        //    {
+        //        var sql =
+        //        @"SELECT * FROM lineaventavirtual WHERE IdVenta = @venta AND (codigo = 'Pago' OR codigo = 'A Cuenta')";
+        //        return db.Database.SqlQuery<LineaVentaVirtual>(sql,
+        //            new SqlParameter("venta", venta))
+        //            .ToList();
+        //    }
+        //}        
         
-        public List<VentaDetalle> GetDetalleDeVentaByVentaId(long venta)
+        public List<VentaDetalle> GetDetalleDeVentaByVentaId(int year, long venta)
         {
             var ventaInteger = (int)venta;
 
             try
             {
-                using (var db = FarmaciaContext.Ventas())
+                using (var db = FarmaciaContext.VentasByYear(year))
                 {
                     var sql = @"SELECT ID_Farmaco as Farmaco, Organismo, Cantidad, PVP, DescLin as Descuento, Importe FROM lineas_venta WHERE ID_venta= @venta";
                     var lineas = db.Database.SqlQuery<DTO.LineaVenta>(sql,
@@ -374,24 +372,26 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             var ventaId = int.Parse($"{id}".Substring(4));
 
             using (var db = FarmaciaContext.VentasByYear(year))
-            {
+            {                
                 var sql = @"SELECT Id_Ticket as Numero, Serie FROM Tickets_D WHERE Id_Venta = @venta";
-                return db.Database.SqlQuery<Ticket>(sql,
-                    new SqlParameter("venta", ventaId))
+                var rs = db.Database.SqlQuery<DTO.Ticket>(sql,
+                    new OleDbParameter("venta", ventaId))
                     .FirstOrDefault();
+
+                return rs != null ? new Ticket { Numero = rs.Numero, Serie = rs.Serie } : null;
             }
         }
 
-        public LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea)
-        {
-            using (var db = FarmaciaContext.Ventas())
-            {
-                var sql = @"SELECT * FROM LineaVentaReden WHERE IdVenta = @venta AND IdNLinea = @linea";
-                return db.Database.SqlQuery<LineaVentaRedencion>(sql,
-                        new SqlParameter("venta", venta),
-                        new SqlParameter("linea", linea))
-                    .FirstOrDefault();
-            }
-        }        
+        //public LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea)
+        //{
+        //    using (var db = FarmaciaContext.Ventas())
+        //    {
+        //        var sql = @"SELECT * FROM LineaVentaReden WHERE IdVenta = @venta AND IdNLinea = @linea";
+        //        return db.Database.SqlQuery<LineaVentaRedencion>(sql,
+        //                new SqlParameter("venta", venta),
+        //                new SqlParameter("linea", linea))
+        //            .FirstOrDefault();
+        //    }
+        //}        
     }
 }
