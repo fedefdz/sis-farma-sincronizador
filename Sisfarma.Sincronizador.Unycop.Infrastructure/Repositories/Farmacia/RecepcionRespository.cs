@@ -71,7 +71,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     rs = db.Database.SqlQuery<DTO.Recepcion>(sql,
                         new OleDbParameter("year", year))
                         .Where(r => r.Fecha.HasValue)
-                        .Where(r => r.Albaran.HasValue)
+                        .Where(r => r.Albaran.HasValue)                    
                         .ToList();
                 }
 
@@ -95,7 +95,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     var sql = $@"SELECT ID_Fecha as Fecha, AlbaranID as Albaran, Proveedor, ID_Farmaco as Farmaco, PVP, PC, PVAlb as PVAlbaran, PCTotal, Recibido, Bonificado, Devuelto From Recepcion WHERE ID_Fecha > #{fecha.ToString("MM-dd-yyyy HH:mm:ss")}# AND (recibido <> 0 OR devuelto <> 0 OR bonificado <> 0) Order by ID_Fecha ASC";
                     rs = db.Database.SqlQuery<DTO.Recepcion>(sql)
                         .Where(r => r.Fecha.HasValue)
-                        .Where(r => r.Albaran.HasValue)                        
+                        .Where(r => r.Albaran.HasValue)                                                
                         .ToList();                    
                 }
 

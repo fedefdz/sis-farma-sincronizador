@@ -20,20 +20,10 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             {
                 var sql = @"SELECT Cod_Barra as Serial, ID_Farmaco as Farmaco FROM codigo_barra";
                 return db.Database.SqlQuery<DTO.CodigoBarra>(sql)
+                    //.Take(1000)
                     .ToList()
                     .Select(x => new Sinonimo { CodigoBarra = x.Serial, CodigoNacional = x.Farmaco.ToString()});
             }
-        }
-
-        //public Sinonimos GetOneOrDefaultByArticulo(string codigo)
-        //{
-        //    using (var db = FarmaciaContext.Create(_config))
-        //    {
-        //        var sql = @"SELECT * FROM sinonimo WHERE IdArticu = @codigo";
-        //        return db.Database.SqlQuery<Sinonimos>(sql,
-        //            new SqlParameter("codigo", codigo))
-        //            .FirstOrDefault();
-        //    }
-        //}        
+        }        
     }
 }

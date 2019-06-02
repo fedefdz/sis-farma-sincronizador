@@ -65,7 +65,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 rs = db.Database.SqlQuery<DTO.Encargo>(sql,
                     new OleDbParameter("year", year),
                     new OleDbParameter("encargos", (int) encargo))
-                        .Take(10)
+                        .Take(1000)
                         .ToList();
             }
             

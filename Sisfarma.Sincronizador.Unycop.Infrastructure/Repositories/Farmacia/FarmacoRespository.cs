@@ -68,7 +68,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"select ID_Farmaco as Id, Familia, CategoriaId, SubcategoriaId, Fecha_U_Entrada as FechaUltimaEntrada, Fecha_U_Salida as FechaUltimaSalida, Ubicacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, BolsaPlastico, PVP, IVA, Stock, Existencias, Denominacion, Laboratorio, FechaBaja, Fecha_Caducidad as FechaCaducidad from Farmacos WHERE Fecha_U_Entrada >= @fecha ORDER BY Fecha_U_Entrada ASC";
                 rs =  db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("fecha", fecha.ToDateInteger("yyyyMMdd")))
-                    .Take(10)
+                    .Take(1000)
                     .ToList();
             }
 
@@ -83,7 +83,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"select ID_Farmaco as Id, Familia, CategoriaId, SubcategoriaId, Fecha_U_Entrada as FechaUltimaEntrada, Fecha_U_Salida as FechaUltimaSalida, Ubicacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, BolsaPlastico, PVP, IVA, Stock, Existencias, Denominacion, Laboratorio, FechaBaja, Fecha_Caducidad as FechaCaducidad from Farmacos WHERE Fecha_U_Salida >= @fecha ORDER BY Fecha_U_Salida ASC";
                 rs = db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("fecha", fecha.ToDateInteger("yyyyMMdd")))
-                    .Take(10)
+                    .Take(1000)
                     .ToList();
             }
 
@@ -98,7 +98,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"select ID_Farmaco as Id, Familia, CategoriaId, SubcategoriaId, Fecha_U_Entrada as FechaUltimaEntrada, Fecha_U_Salida as FechaUltimaSalida, Ubicacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, BolsaPlastico, PVP, IVA, Stock, Existencias, Denominacion, Laboratorio, FechaBaja, Fecha_Caducidad as FechaCaducidad from Farmacos WHERE ID_Farmaco >= @codigo AND (existencias <= 0 OR existencias IS NULL) ORDER BY ID_Farmaco ASC";
                 rs = db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("codigo", int.Parse(codigo)))
-                    .Take(10)
+                    .Take(1000)
                     .ToList();
             }
 
@@ -113,7 +113,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"select ID_Farmaco as Id, Familia, CategoriaId, SubcategoriaId, Fecha_U_Entrada as FechaUltimaEntrada, Fecha_U_Salida as FechaUltimaSalida, Ubicacion, PC_U_Entrada as PrecioUnicoEntrada, PCMedio as PrecioMedio, BolsaPlastico, PVP, IVA, Stock, Existencias, Denominacion, Laboratorio, FechaBaja, Fecha_Caducidad as FechaCaducidad from Farmacos WHERE ID_Farmaco >= @codigo AND existencias > 0 ORDER BY ID_Farmaco ASC";
                 rs = db.Database.SqlQuery<DTO.Farmaco>(sql,
                     new OleDbParameter("codigo", int.Parse(codigo)))
-                    .Take(10)
+                    .Take(1000)
                     .ToList();
             }
 

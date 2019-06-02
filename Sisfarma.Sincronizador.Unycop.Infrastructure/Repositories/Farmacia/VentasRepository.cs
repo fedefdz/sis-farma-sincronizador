@@ -5,7 +5,6 @@ using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
@@ -66,19 +65,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             _familiaRepository = familiaRepository ?? throw new ArgumentNullException(nameof(familiaRepository));
             _laboratorioRepository = laboratorioRepository ?? throw new ArgumentNullException(nameof(laboratorioRepository));
             _vendedoresRepository = vendedoresRepository ?? throw new ArgumentNullException(nameof(vendedoresRepository));
-        }
-
-        //public VentaDetalle GetLineaVentaOrDefaultByKey(long venta, long linea)
-        //{
-        //    using (var db = FarmaciaContext.Ventas())
-        //    {
-        //        var sql = @"SELECT * FROM lineaventa WHERE IdVenta = @venta AND IdNLinea = @linea";
-        //        return db.Database.SqlQuery<VentaDetalle>(sql,
-        //            new SqlParameter("venta", venta),
-        //            new SqlParameter("linea", linea))
-        //            .FirstOrDefault();
-        //    }
-        //}
+        }        
 
         public Venta GetOneOrDefaultById(long id)
         {
@@ -152,7 +139,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("year", year),
                         new OleDbParameter("value", valueInteger))
-                        .Take(10)
+                        .Take(1000)
                         .ToList();
                 }
             }
@@ -215,7 +202,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     rs = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("id", (int)id),
                         new OleDbParameter("year", year))
-                            .Take(10)
+                            .Take(1000)
                             .ToList();
                 }
             }
@@ -264,29 +251,6 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             return ventas;
         }
 
-        //public List<Venta> GetVirtualesLessThanId(long venta)
-        //{
-        //    using (var db = FarmaciaContext.Ventas())
-        //    {
-        //        var sql = @"SELECT v.* FROM venta v INNER JOIN lineaventavirtual lvv ON lvv.idventa = v.idventa AND (lvv.codigo = 'Pago' OR lvv.codigo = 'A Cuenta') " +
-        //            @"WHERE v.ejercicio >= 2015 AND v.IdVenta < @venta ORDER BY v.IdVenta DESC";
-        //        return db.Database.SqlQuery<Venta>(sql,
-        //            new SqlParameter("venta", venta))
-        //            .ToList();
-        //    }
-        //}
-
-        //public List<LineaVentaVirtual> GetLineasVirtualesByVenta(int venta)
-        //{
-        //    using (var db = FarmaciaContext.Ventas())
-        //    {
-        //        var sql =
-        //        @"SELECT * FROM lineaventavirtual WHERE IdVenta = @venta AND (codigo = 'Pago' OR codigo = 'A Cuenta')";
-        //        return db.Database.SqlQuery<LineaVentaVirtual>(sql,
-        //            new SqlParameter("venta", venta))
-        //            .ToList();
-        //    }
-        //}        
         
         public List<VentaDetalle> GetDetalleDeVentaByVentaId(int year, long venta)
         {
@@ -380,18 +344,6 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 
                 return rs != null ? new Ticket { Numero = rs.Numero, Serie = rs.Serie } : null;
             }
-        }
-
-        //public LineaVentaRedencion GetOneOrDefaultLineaRedencionByKey(int venta, int linea)
-        //{
-        //    using (var db = FarmaciaContext.Ventas())
-        //    {
-        //        var sql = @"SELECT * FROM LineaVentaReden WHERE IdVenta = @venta AND IdNLinea = @linea";
-        //        return db.Database.SqlQuery<LineaVentaRedencion>(sql,
-        //                new SqlParameter("venta", venta),
-        //                new SqlParameter("linea", linea))
-        //            .FirstOrDefault();
-        //    }
-        //}        
+        }        
     }
 }

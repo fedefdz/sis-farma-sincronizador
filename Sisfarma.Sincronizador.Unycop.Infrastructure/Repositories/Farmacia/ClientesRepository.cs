@@ -43,7 +43,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"SELECT c.ID_Cliente as Id, c.Nombre, c.Direccion, c.Localidad, c.Cod_Postal as CodigoPostal, c.Fecha_Alta as FechaAlta, c.Fecha_Baja as Baja, c.Sexo, c.ControlLOPD as LOPD, c.DNI_CIF as DNICIF, c.Telefono, c.Fecha_Nac as FechaNacimiento, c.Movil, c.Correo, c.Clave as Tarjeta, c.Puntos, ec.nombre AS EstadoCivil FROM clientes c LEFT JOIN estadoCivil ec ON ec.id = c.estadoCivil WHERE Id_cliente > @id ORDER BY Id_cliente";
                 rs = db.Database.SqlQuery<DTO.Cliente>(sql,
                     new OleDbParameter("id", (int) id))
-                    .Take(10)
+                    .Take(1000)
                     .ToList();                    
             }
                         
