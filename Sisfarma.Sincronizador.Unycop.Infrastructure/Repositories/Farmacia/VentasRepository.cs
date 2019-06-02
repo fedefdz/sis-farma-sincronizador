@@ -139,7 +139,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("year", year),
                         new OleDbParameter("value", valueInteger))
-                        .Take(1000)
+                        .Take(10)
                         .ToList();
                 }
             }
@@ -202,7 +202,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     rs = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("id", (int)id),
                         new OleDbParameter("year", year))
-                            .Take(1000)
+                            .Take(10)
                             .ToList();
                 }
             }

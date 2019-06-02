@@ -16,24 +16,43 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores
         public static List<KeyValuePair<TaskSincronizador, int>> TaskSincronizadores { get; set; } = new List<KeyValuePair<TaskSincronizador, int>>();
 
         // milisegundos
+        //public static readonly int DelayCategoria = 3600000;
+        //public static readonly int DelayFamilia = 300000;
+        //public static readonly int DelayClientes = 30000;
+        //public static readonly int DelayClientesHuecos = 300000;
+        //public static readonly int DelayControlStock = 10000;
+        //public static readonly int DelayControlStockFechas = 60000;
+        //public static readonly int DelayEncargosActualizar = 60000;
+        //public static readonly int DelayListas = 300000;
+        //public static readonly int DelayEncargos = 60000;
+        //public static readonly int DelayProductosCriticos = 60000;
+        //public static readonly int DelayPedidos = 10000;
+        //public static readonly int DelayPuntosPendiente = 5000;
+        //public static readonly int DelayProductosBorrar = 60000;
+        //public static readonly int DelayVentaMensual = 300000;
+        //public static readonly int DelaySinomimos = 300000;
+        //public static readonly int DelayProveedores = 3600000;
+        //public static readonly int DelayProveedoresHistorico = 300000;
+        //public static readonly int DelayRecetaPendiente = 60000;
+
         public static readonly int DelayCategoria = 3600000;
         public static readonly int DelayFamilia = 300000;
         public static readonly int DelayClientes = 30000;
         public static readonly int DelayClientesHuecos = 300000;
-        public static readonly int DelayControlStock = 10000;
-        public static readonly int DelayControlStockFechas = 60000;
-        public static readonly int DelayEncargosActualizar = 60000;
+        public static readonly int DelayControlStock = 10;
+        public static readonly int DelayControlStockFechas = 10;
+        public static readonly int DelayEncargosActualizar = 10;
         public static readonly int DelayListas = 300000;
-        public static readonly int DelayEncargos = 60000;
-        public static readonly int DelayProductosCriticos = 60000;
-        public static readonly int DelayPedidos = 10000;
-        public static readonly int DelayPuntosPendiente = 5000;
-        public static readonly int DelayProductosBorrar = 60000;
+        public static readonly int DelayEncargos = 10;
+        public static readonly int DelayProductosCriticos = 10;
+        public static readonly int DelayPedidos = 10;
+        public static readonly int DelayPuntosPendiente = 1;
+        public static readonly int DelayProductosBorrar = 10;
         public static readonly int DelayVentaMensual = 300000;
         public static readonly int DelaySinomimos = 300000;
         public static readonly int DelayProveedores = 3600000;
         public static readonly int DelayProveedoresHistorico = 300000;
-        public static readonly int DelayRecetaPendiente = 60000;
+        public static readonly int DelayRecetaPendiente = 10;
 
         public static ConcurrentBag<Task> CreateConcurrentTasks()
         {

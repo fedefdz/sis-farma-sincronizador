@@ -44,7 +44,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"SELECT ID_NumPedido as Id, ID_Proveedor as Proveedor, ID_Farmaco as Farmaco, CantInicial, Fecha From recibir WHERE datevalue(Fecha) >= DateValue (@fecha) Order by ID_NumPedido ASC";
                 rs = db.Database.SqlQuery<DTO.Pedido>(sql,                    
                     new OleDbParameter("fecha", fecha))
-                        .Take(1000)
+                        .Take(10)
                         .ToList();
             }
 
@@ -66,7 +66,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = @"SELECT ID_NumPedido as Id, ID_Proveedor as Proveedor, ID_Farmaco as Farmaco, CantInicial, Fecha From recibir WHERE ID_NumPedido >= @pedido Order by ID_NumPedido ASC";
                 rs = db.Database.SqlQuery<DTO.Pedido>(sql,
                     new OleDbParameter("pedido", (int)pedido))
-                        .Take(1000)
+                        .Take(10)
                         .ToList();
             }
 

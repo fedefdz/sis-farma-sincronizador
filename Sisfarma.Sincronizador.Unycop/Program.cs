@@ -192,13 +192,13 @@ namespace Sisfarma.Sincronizador.Unycop
 
         private static LocalConfiguracion GetConnexionLocal(string server, string token)
         {
-            //return new LocalConfiguracion
-            //{
-            //    //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
-            //    pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM",
-            //    password = "BIGOTES",
-            //    marketCodeList = -1
-            //};
+            return new LocalConfiguracion
+            {
+                pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+                //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM",
+                password = "BIGOTES",
+                marketCodeList = -1
+            };
 
             try
             {
