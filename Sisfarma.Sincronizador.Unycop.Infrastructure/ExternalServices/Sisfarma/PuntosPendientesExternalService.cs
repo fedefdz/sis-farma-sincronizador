@@ -164,6 +164,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 superFamilia = pp.SuperFamilia,
                 pvp = pp.PVP,
                 puc = pp.PUC,
+                pago = pp.Pago,
                 categoria = pp.Categoria,
                 subcategoria = pp.Subcategoria,
                 sistema = pp.Sistema,

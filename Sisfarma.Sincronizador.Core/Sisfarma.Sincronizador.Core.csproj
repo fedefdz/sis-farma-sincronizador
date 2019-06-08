@@ -55,5 +55,11 @@
     <Compile Include="Helpers\Cryptographer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sisfarma.RestClient\Sisfarma.RestClient.csproj">
+      <Project>{496093B9-667B-4041-8581-462771FC68FC}</Project>
+      <Name>Sisfarma.RestClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
