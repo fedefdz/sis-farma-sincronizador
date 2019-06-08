@@ -1,4 +1,5 @@
 ﻿using Sisfarma.Sincronizador.Core.Config;
+using Sisfarma.Sincronizador.Core.Extensions;
 using Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Unycop.Infrastructure.Data;
@@ -127,19 +128,18 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public List<Venta> GetAllByIdGreaterOrEqual(int year, long value)
         {
             // Access no handlea long
-            var valueInteger = (int)value;
+            var valueInteger = $"{value}".Substring(4).ToIntegerOrDefault();
             List<DTO.Venta> ventasAccess;
 
             try
             {
                 using (var db = FarmaciaContext.VentasByYear(year))
                 {
-                    var sql = @"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
+                    var sql = @"SELECT TOP 10 ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
 
                     ventasAccess = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("year", year),
-                        new OleDbParameter("value", valueInteger))
-                        .Take(10)
+                        new OleDbParameter("value", valueInteger))                        
                         .ToList();
                 }
             }

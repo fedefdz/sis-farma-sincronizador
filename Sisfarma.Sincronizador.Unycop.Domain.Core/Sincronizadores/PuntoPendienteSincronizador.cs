@@ -2,6 +2,7 @@
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,15 +38,26 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void PreSincronizacion()
         {
-            base.PreSincronizacion();            
+            base.PreSincronizacion();
+            if (_ultimaVenta == 0 || _ultimaVenta == 1)
+                _ultimaVenta = $"{_anioInicio}{_ultimaVenta}".ToIntegerOrDefault();
         }
 
         public override void Process()
         {
-            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : _anioInicio;
-                
-            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);            
-            
+            var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : $"{_ultimaVenta}".Substring(0, 4).ToIntegerOrDefault();
+
+            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);
+            if (!ventas.Any())
+            {
+                if (anioProcesando == DateTime.Now.Year)
+                    return;
+
+                _aniosProcesados.Add(anioProcesando + 1);
+                _ultimaVenta = $"{anioProcesando + 1 }{0}".ToIntegerOrDefault();
+                return;
+            }
+
             foreach (var venta in ventas)
             {
                 Task.Delay(5).Wait();
@@ -60,14 +72,14 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                     _sisfarma.PuntosPendientes.Sincronizar(puntoPendiente);
                 }
 
-                _ultimaVenta = venta.Id;
+                _ultimaVenta = $"{venta.FechaHora.Year}{venta.Id}".ToIntegerOrDefault();
             }
 
             // <= 1 porque las ventas se recuperan con >= ventaID
             if (ventas.Count() <= 1)
             {
                 _aniosProcesados.Add(anioProcesando + 1);
-                _ultimaVenta = 1;
+                _ultimaVenta = $"{anioProcesando + 1 }{0}".ToIntegerOrDefault();
             }                                        
         }
 
