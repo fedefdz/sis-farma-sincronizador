@@ -31,7 +31,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             var idInteger = (int)id;
             using (var db = FarmaciaContext.Proveedores())
             {
-                var sql = "SELECT Nombre FROM Proveedores WHERE ID_Proveedor = @id";
+                var sql = "SELECT ID_Proveedor as Id, Nombre FROM Proveedores WHERE ID_Proveedor = @id";
                 return db.Database.SqlQuery<Proveedor>(sql,
                     new OleDbParameter("id", idInteger))
                     .FirstOrDefault();

@@ -48,7 +48,8 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                     if (_lastPedido == null)
                         _lastPedido = new Pedido();
 
-                    _lastPedido.idPedido = recepcion.Id;                 
+                    _lastPedido.idPedido = recepcion.Id;
+                    _lastPedido.fechaPedido = recepcion.Fecha;
                     
                     foreach (var linea in recepcion.Detalle)
                     {
@@ -75,10 +76,11 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 subcategoria = detalle.Farmaco.Subcategoria?.Nombre ?? string.Empty,
                 cantidad = detalle.Cantidad,
                 cantidadBonificada = detalle.CantidadBonificada,
-                pvp = (float) detalle.PVP,
-                puc = (float) detalle.PUC,
-                cod_laboratorio = detalle.Farmaco.Laboratorio?.Id.ToString() ?? "0",
-                laboratorio = detalle.Farmaco.Laboratorio?.Nombre ?? LABORATORIO_DEFAULT
+                pvp = (float) (detalle.Farmaco?.Precio ?? 0),
+                puc = (float) (detalle.Farmaco?.PrecioCoste ?? 0),
+                cod_laboratorio = detalle.Farmaco?.Laboratorio?.Codigo ?? "0",
+                laboratorio = detalle.Farmaco?.Laboratorio?.Nombre ?? LABORATORIO_DEFAULT,
+                proveedor = detalle.Farmaco?.Proveedor?.Nombre ?? string.Empty
             };
         }
 
@@ -87,7 +89,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             return new Pedido
             {
                 idPedido = recepcion.Id,
-                fechaPedido = recepcion.Fecha.Date,
+                fechaPedido = recepcion.Fecha,
                 hora = DateTime.Now,
                 numLineas = recepcion.Lineas,
                 importePvp = (float) recepcion.ImportePVP,
