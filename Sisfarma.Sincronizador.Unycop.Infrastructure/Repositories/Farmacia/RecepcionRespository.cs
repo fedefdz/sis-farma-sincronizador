@@ -139,7 +139,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             foreach (var group in groups)
             {
                 var linea = 0;
-                var fecha = group.Value.First().Fecha;
+                var fecha = group.Value.Last().Fecha; // a la vuelta preguntamos por > fecha
                 var proveedorPedido = group.Value.First().Proveedor.HasValue ? _proveedorRepository.GetOneOrDefaultById(group.Value.First().Proveedor.Value) : null;
                 var detalle = new List<RecepcionDetalle>();
                 foreach (var item in group.Value)
@@ -165,7 +165,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                                 ? (decimal)farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
                                 : ((decimal?)farmaco.PrecioMedio ?? 0m) * _factorCentecimal;
 
-                        var proveedor = _proveedorRepository.GetOneOrDefaultByCodigoNacional(farmaco.Id);
+                        var proveedor = _proveedorRepository.GetOneOrDefaultByCodigoNacional(farmaco.Id)
+                                ?? _proveedorRepository.GetOneOrDefaultById(farmaco.Id);
 
                         var categoria = farmaco.CategoriaId.HasValue
                             ? _categoriaRepository.GetOneOrDefaultById(farmaco.CategoriaId.Value)
