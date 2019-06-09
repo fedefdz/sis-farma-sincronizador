@@ -9,7 +9,7 @@ namespace Sisfarma.Sincronizador.Core.Extensions
     public static class StringExtension
     {
         public static string Strip(this string word) => word != null
-                ? StripExtended(Regex.Replace(word.Trim(), @"[.',\-\\]", string.Empty))
+                ? StripExtended(Regex.Replace(word.Trim(), @"[',\-\\]", string.Empty))
                 : string.Empty;
         
         public static int ToIntegerOrDefault(this string @this, int @default = 0)

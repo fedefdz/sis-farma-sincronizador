@@ -300,7 +300,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                                 : null;
 
                             var familia = _familiaRepository.GetOneOrDefaultById(farmaco.Familia);
-                            var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio);
+                            var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio)
+                                ?? new Laboratorio { Codigo = farmaco.Laboratorio };
 
                             ventaDetalle.Farmaco = new Farmaco
                             {
