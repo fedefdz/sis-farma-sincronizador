@@ -70,7 +70,9 @@ namespace Sisfarma.Sincronizador.Unycop.IoC.Factories
                         laboratorioRepository: new LaboratorioRepository()),
 
                 proveedores: new ProveedoresRepository(
-                        recepcionRespository: new RecepcionRespository())
+                        recepcionRespository: new RecepcionRespository()),
+
+                vendedores: new VendedoresRepository()
             );                        
         }
     }

@@ -2,6 +2,7 @@
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,16 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         protected const string TIPO_CLASIFICACION_CATEGORIA = "Categoria";
         protected const string SISTEMA_UNYCOP = "unycop";
 
+        private readonly ITicketRepository _ticketRepository;
+        private readonly decimal _factorCentecimal = 0.01m;
+
         private string _clasificacion;
-
         private ICollection<int> _aniosProcesados;
-
 
         public PuntoPendienteSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
             : base(farmacia, fisiotes)
         {
+            _ticketRepository = new TicketRepository();
             _aniosProcesados = new HashSet<int>();
         }
 
@@ -58,10 +61,29 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 return;
             }
 
+
+
             foreach (var venta in ventas)
             {
                 Task.Delay(5).Wait();
                 _cancellationToken.ThrowIfCancellationRequested();
+
+                if (venta.ClienteId > 0)
+                    venta.Cliente = _farmacia.Clientes.GetOneOrDefaultById(venta.ClienteId);
+
+                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(venta.Id, venta.FechaHora.Year);
+                if (ticket != null)
+                {
+                    venta.Ticket = new Ticket
+                    {
+                        Numero = ticket.Numero,
+                        Serie = ticket.Serie
+                    };
+                }
+
+                venta.VendedorNombre = _farmacia.Vendedores.GetOneOrDefaultById(venta.VendedorId)?.Nombre;
+                venta.Detalle = _farmacia.Ventas.GetDetalleDeVentaByVentaId($"{venta.FechaHora.Year}{venta.Id}".ToIntegerOrDefault());
+
 
                 if (venta.HasCliente())
                     InsertOrUpdateCliente(venta.Cliente);
