@@ -135,7 +135,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             {
                 using (var db = FarmaciaContext.VentasByYear(year))
                 {
-                    var sql = @"SELECT TOP 100 ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
+                    var sql = @"SELECT TOP 999 ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE year(fecha) >= @year AND ID_VENTA >= @value ORDER BY ID_VENTA ASC";
 
                     return db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("year", year),
@@ -146,7 +146,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             }
             catch (FarmaciaContextException)
             {
-                ventasAccess = new List<DTO.Venta>();
+                return new List<Venta>();
             }
 
             var ventas = new List<Venta>();

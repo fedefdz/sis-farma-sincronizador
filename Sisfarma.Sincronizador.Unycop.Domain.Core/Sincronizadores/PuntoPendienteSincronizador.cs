@@ -50,7 +50,9 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         {
             var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : $"{_ultimaVenta}".Substring(0, 4).ToIntegerOrDefault();
 
+            LogTimeMessage("Recuperando data de Access");
             var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);
+            LogTimeMessage("Data de Access recuprada");
             if (!ventas.Any())
             {
                 if (anioProcesando == DateTime.Now.Year)
@@ -68,6 +70,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 Task.Delay(5).Wait();
                 _cancellationToken.ThrowIfCancellationRequested();
 
+                LogTimeMessage("Recuperando detalle de Access");
                 if (venta.ClienteId > 0)
                     venta.Cliente = _farmacia.Clientes.GetOneOrDefaultById(venta.ClienteId);
 
@@ -84,13 +87,19 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 venta.VendedorNombre = _farmacia.Vendedores.GetOneOrDefaultById(venta.VendedorId)?.Nombre;
                 venta.Detalle = _farmacia.Ventas.GetDetalleDeVentaByVentaId($"{venta.FechaHora.Year}{venta.Id}".ToIntegerOrDefault());
 
+                LogTimeMessage("Detalle de Access recuperado");
 
                 if (venta.HasCliente())
+                {
+                    LogTimeMessage("Sincronizando cliente");
                     InsertOrUpdateCliente(venta.Cliente);
+                }
+                    
 
                 var puntosPendientes = GenerarPuntosPendientes(venta);
                 foreach (var puntoPendiente in puntosPendientes)
                 {
+                    LogTimeMessage("Sincronizando punto pendiente");
                     _sisfarma.PuntosPendientes.Sincronizar(puntoPendiente);
                 }
 
