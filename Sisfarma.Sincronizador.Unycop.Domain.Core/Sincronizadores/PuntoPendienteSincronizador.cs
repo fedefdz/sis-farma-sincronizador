@@ -49,9 +49,11 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         public override void Process()
         {
             var anioProcesando = _aniosProcesados.Any() ? _aniosProcesados.Last() : $"{_ultimaVenta}".Substring(0, 4).ToIntegerOrDefault();
+            
+            var ventaId = int.Parse($"{_ultimaVenta}".Substring(4));
 
             LogTimeMessage("Recuperando data de Access");
-            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, _ultimaVenta);
+            var ventas = _farmacia.Ventas.GetAllByIdGreaterOrEqual(anioProcesando, ventaId);
             LogTimeMessage("Data de Access recuprada");
             if (!ventas.Any())
             {

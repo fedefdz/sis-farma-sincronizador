@@ -128,7 +128,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
         public List<Venta> GetAllByIdGreaterOrEqual(int year, long value)
         {
             // Access no handlea long
-            var valueInteger = $"{value}".Substring(4).ToIntegerOrDefault();
+            var valueInteger = (int)value;
             List<DTO.Venta> ventasAccess;
 
             try
