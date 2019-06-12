@@ -146,7 +146,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                 idnlinea = pp.LineaNumero,
                 cod_barras = pp.CodigoBarra,
                 cod_nacional = pp.CodigoNacional,
-                descripcion = pp.Descripcion,
+                descripcion = pp.Descripcion.Strip(),
                 familia = pp.Familia,
                 cantidad = pp.Cantidad,
                 precio = pp.Precio,

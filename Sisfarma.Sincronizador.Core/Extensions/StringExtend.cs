@@ -53,7 +53,7 @@ namespace Sisfarma.Sincronizador.Core.Extensions
                 UInt16 num = Convert.ToUInt16(ch);                
                 if ((num >= 32u) && (num <= 126u)) buffer.Append(ch);
             }
-            return buffer.ToString().Replace("%", "% ");
+            return buffer.ToString().Replace("%", " % ");
         }
     }
 }

@@ -147,45 +147,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
             catch (FarmaciaContextException)
             {
                 return new List<Venta>();
-            }
-
-            var ventas = new List<Venta>();
-            foreach (var ventaAccess in ventasAccess)
-            {
-                var venta = new Venta
-                {
-                    Id = ventaAccess.Id,
-                    Tipo = ventaAccess.Tipo.ToString(),
-                    FechaHora = ventaAccess.Fecha,
-                    Puesto = ventaAccess.Puesto,
-                    ClienteId = ventaAccess.Cliente,
-                    VendedorId = ventaAccess.Vendedor,
-                    TotalDescuento = ventaAccess.Descuento * _factorCentecimal,
-                    TotalBruto = ventaAccess.Pago * _factorCentecimal,
-                    Importe = ventaAccess.Importe * _factorCentecimal,
-                };
-
-
-                if (venta.ClienteId > 0)
-                    venta.Cliente = _clientesRepository.GetOneOrDefaultById(venta.ClienteId);
-
-                var ticket = _ticketRepository.GetOneOrdefaultByVentaId(venta.Id, year);
-                if (ticket != null)
-                {
-                    venta.Ticket = new Ticket
-                    {
-                        Numero = ticket.Numero,
-                        Serie = ticket.Serie
-                    };
-                }
-
-                venta.VendedorNombre = _vendedoresRepository.GetOneOrDefaultById(venta.VendedorId)?.Nombre;
-                venta.Detalle = GetDetalleDeVentaByVentaId(year, venta.Id);
-
-                ventas.Add(venta);
-            }
-
-            return ventas;
+            }            
         }
 
         private Venta GenerarVentaEncabezado(DTO.Venta venta) 
