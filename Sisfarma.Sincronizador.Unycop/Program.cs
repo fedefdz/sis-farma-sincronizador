@@ -120,8 +120,6 @@ namespace Sisfarma.Sincronizador.Unycop
                         fisiotes: SisfarmaFactory.Create(),
                         listaDeArticulo: FarmaciaContext.ListaDeArticulo),
                         delay: SincronizadorTaskManager.DelayVentaMensual);
-            
-
 
             //Task.Factory.StartNew(() => new Domain.Core.Sincronizadores.SinonimoSincronizador(FarmaciaFactory.Create(), SisfarmaFactory.Create())
             //    .SetHorarioVaciamientos("1000", "1230", "1730", "1930")

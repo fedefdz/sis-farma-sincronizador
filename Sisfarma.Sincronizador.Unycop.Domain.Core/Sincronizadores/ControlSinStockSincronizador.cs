@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
@@ -36,7 +37,8 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void Process()
         {
-            var farmacos = _farmacia.Farmacos.GetAllWithoutStockByIdGreaterOrEqual(_ultimoMedicamentoSincronizado);
+            var repository = _farmacia.Farmacos as FarmacoRespository;
+            var farmacos = repository.GetAllWithoutStockByIdGreaterOrEqualAsDTO(_ultimoMedicamentoSincronizado);
 
             if (!farmacos.Any())
             {
@@ -47,16 +49,16 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
             foreach (var farmaco in farmacos)
             {
-                Task.Delay(5);
+                Task.Delay(5).Wait();
 
                 _cancellationToken.ThrowIfCancellationRequested();
 
-                var medicamento = GenerarMedicamento(farmaco);
+                var medicamento = GenerarMedicamento(repository.GenerarFarmaco(farmaco));
                 _sisfarma.Medicamentos.Sincronizar(medicamento);
-                _ultimoMedicamentoSincronizado = farmaco.Codigo;
+                _ultimoMedicamentoSincronizado = medicamento.cod_nacional;
             }
 
-            if (!_farmacia.Farmacos.AnyGraterThatDoesnHaveStock(farmacos.Last().Codigo))
+            if (!_farmacia.Farmacos.AnyGraterThatDoesnHaveStock(_ultimoMedicamentoSincronizado))
             {
                 _sisfarma.Configuraciones.Update(Configuracion.FIELD_POR_DONDE_VOY_SIN_STOCK, "0");
                 _ultimoMedicamentoSincronizado = "0";

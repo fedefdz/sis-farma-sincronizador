@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
@@ -36,17 +37,18 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void Process()
         {
-            var farmacos = _farmacia.Farmacos.GetAllByFechaUltimaEntradaGreaterOrEqual(_ultimoFechaActualizacionStockSincronizado);
+            var repository = _farmacia.Farmacos as FarmacoRespository;
+            var farmacos = repository.GetAllByFechaUltimaEntradaGreaterOrEqualAsDTO(_ultimoFechaActualizacionStockSincronizado);
 
             foreach (var farmaco in farmacos)
             {
-                Task.Delay(5);
+                Task.Delay(5).Wait();
 
                 _cancellationToken.ThrowIfCancellationRequested();
-                var medicamento = GenerarMedicamento(farmaco);
+                var medicamento = GenerarMedicamento(repository.GenerarFarmaco(farmaco));
                 _sisfarma.Medicamentos.Sincronizar(medicamento);
 
-                _ultimoFechaActualizacionStockSincronizado = farmaco.FechaUltimaCompra ?? DateTime.Now;
+                _ultimoFechaActualizacionStockSincronizado = medicamento.fechaUltimaCompra ?? DateTime.Now;
             }
         }
 
