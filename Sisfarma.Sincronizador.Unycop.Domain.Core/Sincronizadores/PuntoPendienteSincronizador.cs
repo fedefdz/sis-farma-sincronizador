@@ -120,9 +120,9 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         {
             if (!venta.HasCliente() && venta.Tipo != "1")
                 return new PuntosPendientes[0];
-            
+
             if (!venta.HasDetalle())
-                return new PuntosPendientes[] { GenerarPuntoPendienteVentaSinDetalle(venta) };
+                return new PuntosPendientes[0];
 
             var puntosPendientes = new List<PuntosPendientes>();
             foreach (var item in venta.Detalle)

@@ -87,7 +87,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 return new PuntosPendientes[0];
 
             if (!venta.HasDetalle())
-                return new PuntosPendientes[] { GenerarPuntoPendienteVentaSinDetalle(venta) };
+                return new PuntosPendientes[0];
 
             var puntosPendientes = new List<PuntosPendientes>();
             foreach (var item in venta.Detalle)
@@ -139,52 +139,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
             return puntosPendientes;
         }
-
-        private PuntosPendientes GenerarPuntoPendienteVentaSinDetalle(FAR.Venta venta)
-        {
-            return new PuntosPendientes
-            {
-                VentaId = $"{venta.FechaHora.Year}{venta.Id}".ToLongOrDefault(),
-                LineaNumero = 1,
-                CodigoBarra = string.Empty,
-                CodigoNacional = "9999999",
-                Descripcion = "Pago Deposito",
-
-                Familia = FAMILIA_DEFAULT,
-                SuperFamilia = _clasificacion == TIPO_CLASIFICACION_CATEGORIA
-                    ? FAMILIA_DEFAULT
-                    : string.Empty,
-                SuperFamiliaAux = string.Empty,
-                FamiliaAux = FAMILIA_DEFAULT,
-                CambioClasificacion = _clasificacion == TIPO_CLASIFICACION_CATEGORIA ? 1 : 0,
-
-                Cantidad = 0,
-                Precio = venta.Importe,
-                Pago = venta.TotalBruto,
-                TipoPago = venta.Tipo,
-                Fecha = venta.FechaHora.Date.ToDateInteger(),
-                DNI = venta.Cliente?.Id.ToString() ?? "0",
-                Cargado = _cargarPuntos.ToLower().Equals("si") ? "no" : "si",
-                Puesto = $"{venta.Puesto}",
-                Trabajador = venta.VendedorNombre,
-                LaboratorioCodigo = string.Empty,
-                Laboratorio = LABORATORIO_DEFAULT,
-                Proveedor = string.Empty,
-                Receta = string.Empty,
-                FechaVenta = venta.FechaHora,
-                PVP = 0,
-                PUC = 0,
-                Categoria = string.Empty,
-                Subcategoria = string.Empty,
-                VentaDescuento = venta.TotalDescuento,
-                LineaDescuento = 0,
-                TicketNumero = venta.Ticket?.Numero,
-                Serie = venta.Ticket?.Serie ?? string.Empty,
-                Sistema = SISTEMA_UNYCOP
-            };
-        }
-
-
+        
         private void InsertOrUpdateCliente(FAR.Cliente cliente)
         {
             var debeCargarPuntos = _puntosDeSisfarma.ToLower().Equals("no") || string.IsNullOrWhiteSpace(_puntosDeSisfarma);
