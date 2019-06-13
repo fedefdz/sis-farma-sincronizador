@@ -19,7 +19,7 @@ namespace Sisfarma.Sincronizador.Domain.Entities.Farmacia
 
         public string Email { get; set; }
 
-        public DateTime FechaNacimiento { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
 
         public long Puntos { get; set; }
 
