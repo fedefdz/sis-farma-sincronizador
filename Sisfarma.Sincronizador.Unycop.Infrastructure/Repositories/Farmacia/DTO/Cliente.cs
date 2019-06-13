@@ -1,6 +1,6 @@
 ﻿namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO
 {
-    internal class Cliente
+    public class Cliente
     {     
         public int Id { get; set; }
 

@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sisfarma.Sincronizador.Domain.Core.Services;
 using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
 using CORE = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
+using DTO = Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
@@ -29,7 +31,8 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             if (IsHoraVaciamientos())            
                 Reset();
 
-            List<Cliente> localClientes = _farmacia.Clientes.GetGreatThanId(_ultimoClienteSincronizado);
+            var repository = _farmacia.Clientes as ClientesRepository;
+            List<DTO.Cliente> localClientes = repository.GetGreatThanIdAsDTO(_ultimoClienteSincronizado);
 
             var hueco = -1L;
             foreach (var cliente in localClientes)
@@ -39,7 +42,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
                 if (hueco == -1) hueco = cliente.Id;
 
-                InsertOrUpdateCliente(cliente);
+                InsertOrUpdateCliente(repository.GenerateCliente(cliente));
                 
                 if (cliente.Id != hueco)
                 {
