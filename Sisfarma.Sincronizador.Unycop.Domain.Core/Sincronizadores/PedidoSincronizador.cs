@@ -3,19 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sisfarma.Sincronizador.Domain.Core.Repositories.Farmacia;
 using Sisfarma.Sincronizador.Domain.Core.Services;
+using Sisfarma.Sincronizador.Domain.Entities.Farmacia;
 using Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
-
+using Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia;
 using DC = Sisfarma.Sincronizador.Domain.Core.Sincronizadores;
 using FAR = Sisfarma.Sincronizador.Domain.Entities.Farmacia;
+using SF = Sisfarma.Sincronizador.Domain.Entities.Fisiotes;
 
 namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 {
     public class PedidoSincronizador : DC.PedidoSincronizador
     {
+        private readonly decimal _factorCentecimal = 0.01m;
+        private readonly ICategoriaRepository _categoriaRepository;
+        private readonly ILaboratorioRepository _laboratorioRepository;
+
         public PedidoSincronizador(IFarmaciaService farmacia, ISisfarmaService fisiotes) 
             : base(farmacia, fisiotes)
-        { }
+        {
+            _categoriaRepository = new CategoriaRepository();
+            _laboratorioRepository = new LaboratorioRepository();
+        }
 
         public override void PreSincronizacion()
         {
@@ -24,9 +34,10 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
 
         public override void Process()
         {
+            var repository = _farmacia.Recepciones as RecepcionRespository;
             var recepciones = (_lastPedido == null)
-                ? _farmacia.Recepciones.GetAllByYear(_anioInicio)
-                : _farmacia.Recepciones.GetAllByDate(_lastPedido.fechaPedido ?? DateTime.MinValue);
+                ? repository.GetAllByYearAsDTO(_anioInicio)
+                : repository.GetAllByDateAsDTO(_lastPedido.fechaPedido ?? DateTime.MinValue);
 
             if (!recepciones.Any())
             {
@@ -34,32 +45,107 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 _lastPedido = null;
                 return;
             }
-            
 
-            foreach (var recepcion in recepciones)
+            var groups = recepciones.GroupBy(k => new { k.Fecha.Value.Year, k.Albaran.Value })
+                        .ToDictionary(
+                            k => new RecepcionCompositeKey { Anio = k.Key.Year, Albaran = k.Key.Value },
+                            v => v.ToList());
+
+            foreach (var group in groups)
             {
-                Task.Delay(5);
-
+                Task.Delay(5).Wait();
                 _cancellationToken.ThrowIfCancellationRequested();
-         
-                if (recepcion.Lineas > 0)
-                {                    
-                    _sisfarma.Pedidos.Sincronizar(GenerarPedido(recepcion));
-                    if (_lastPedido == null)
-                        _lastPedido = new Pedido();
+                
+                var linea = 0;
+                var fecha = group.Value.Last().Fecha; // a la vuelta preguntamos por > fecha
+                var proveedorPedido = group.Value.First().Proveedor.HasValue ? _farmacia.Proveedores.GetOneOrDefaultById(group.Value.First().Proveedor.Value) : null;
 
-                    _lastPedido.idPedido = recepcion.Id;
-                    _lastPedido.fechaPedido = recepcion.Fecha;
-                    
-                    foreach (var linea in recepcion.Detalle)
+                var recepcion = new FAR.Recepcion
+                {
+                    Id = int.Parse($"{group.Key.Anio}{group.Key.Albaran}"),
+                    Fecha = fecha.Value,                  
+                    ImportePVP = group.Value.Sum(x => x.PVP * x.Recibido * _factorCentecimal),
+                    ImportePUC = group.Value.Sum(x => x.PCTotal * _factorCentecimal),
+                    Proveedor = proveedorPedido
+                };
+
+
+                var detalle = new List<RecepcionDetalle>();
+                foreach (var item in group.Value)
+                {                    
+                    var farmaco = (_farmacia.Farmacos as FarmacoRespository).GetOneOrDefaultById(item.Farmaco);
+                    if (farmaco != null)
                     {
-                        Task.Delay(1);
-                        
-                        if (linea.Farmaco != null)
-                            _sisfarma.Pedidos.Sincronizar(GenerarLineaDePedido(linea));
-                    }
+                        var recepcionDetalle = new RecepcionDetalle()
+                        {
+                            Linea = ++linea,
+                            RecepcionId = int.Parse($"{group.Key.Anio}{group.Key.Albaran}"),
+                            Cantidad = item.Recibido - item.Devuelto,
+                            CantidadBonificada = item.Bonificado,
+                            Recepcion = recepcion
+                        };
+
+                        var pcoste = 0m;
+                        if (item.PVAlbaran > 0)
+                            pcoste = item.PVAlbaran * _factorCentecimal;
+                        else if (item.PC > 0)
+                            pcoste = item.PC * _factorCentecimal;
+                        else
+                            pcoste = farmaco.PrecioUnicoEntrada.HasValue && farmaco.PrecioUnicoEntrada != 0
+                                ? (decimal)farmaco.PrecioUnicoEntrada.Value * _factorCentecimal
+                                : ((decimal?)farmaco.PrecioMedio ?? 0m) * _factorCentecimal;
+
+                        var proveedor = _farmacia.Proveedores.GetOneOrDefaultByCodigoNacional(farmaco.Id)
+                                ?? _farmacia.Proveedores.GetOneOrDefaultById(farmaco.Id);
+
+                        var categoria = farmaco.CategoriaId.HasValue
+                            ? _categoriaRepository.GetOneOrDefaultById(farmaco.CategoriaId.Value)
+                            : null;
+
+                        var subcategoria = farmaco.CategoriaId.HasValue && farmaco.SubcategoriaId.HasValue
+                            ? _categoriaRepository.GetSubcategoriaOneOrDefaultByKey(
+                                farmaco.CategoriaId.Value,
+                                farmaco.SubcategoriaId.Value)
+                            : null;
+
+                        var familia = _farmacia.Familias.GetOneOrDefaultById(farmaco.Familia);
+                        var laboratorio = _laboratorioRepository.GetOneOrDefaultByCodigo(farmaco.Laboratorio);
+
+                        recepcionDetalle.Farmaco = new Farmaco
+                        {
+                            Id = farmaco.Id,
+                            Codigo = item.Farmaco.ToString(),
+                            PrecioCoste = pcoste,
+                            Proveedor = proveedor,
+                            Categoria = categoria,
+                            Subcategoria = subcategoria,
+                            Familia = familia,
+                            Laboratorio = laboratorio,
+                            Denominacion = farmaco.Denominacion,
+                            Precio = item.PVP * _factorCentecimal,
+                            Stock = farmaco.Existencias ?? 0                            
+                        };
+
+                        detalle.Add(recepcionDetalle);
+                        _sisfarma.Pedidos.Sincronizar(GenerarLineaDePedido(recepcionDetalle));
+                    }                    
                 }
-            }
+
+                if (detalle.Any())
+                {
+                    recepcion.Lineas = detalle.Count();                    
+                    var pedido = GenerarPedido(recepcion);
+                    _sisfarma.Pedidos.Sincronizar(pedido);                    
+
+                    _lastPedido = pedido;
+                }
+            }            
+        }
+
+        internal class RecepcionCompositeKey
+        {
+            internal int Anio { get; set; }
+            internal int Albaran { get; set; }
         }
 
         private LineaPedido GenerarLineaDePedido(FAR.RecepcionDetalle detalle)
@@ -84,9 +170,9 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             };
         }
 
-        private Pedido GenerarPedido(FAR.Recepcion recepcion)
+        private SF.Pedido GenerarPedido(FAR.Recepcion recepcion)
         {            
-            return new Pedido
+            return new SF.Pedido
             {
                 idPedido = recepcion.Id,
                 fechaPedido = recepcion.Fecha,
