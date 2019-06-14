@@ -57,7 +57,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 _cancellationToken.ThrowIfCancellationRequested();
                 
                 var linea = 0;
-                var fecha = group.Value.Last().Fecha; // a la vuelta preguntamos por > fecha
+                var fecha = group.Value.First().Fecha; // a la vuelta preguntamos por > fecha
                 var proveedorPedido = group.Value.First().Proveedor.HasValue ? _farmacia.Proveedores.GetOneOrDefaultById(group.Value.First().Proveedor.Value) : null;
 
                 var recepcion = new FAR.Recepcion
