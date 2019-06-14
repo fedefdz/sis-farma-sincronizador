@@ -37,24 +37,32 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             var hueco = -1L;
             foreach (var cliente in localClientes)
             {
-                Task.Delay(5);
+                Task.Delay(5).Wait();
                 _cancellationToken.ThrowIfCancellationRequested();
 
                 if (hueco == -1) hueco = cliente.Id;
 
                 InsertOrUpdateCliente(repository.GenerateCliente(cliente));
-                
+
                 if (cliente.Id != hueco)
                 {
                     var huecos = new List<string>();
-                    for (long i = hueco; i < cliente.Id; i++)
+                    var batch = 0;
+                    for (long i = hueco; i < cliente.Id; i++)                    
                     {
                         huecos.Add(i.ToString());
+                        batch++;
+                        if (batch == 1000)
+                        {
+                            _sisfarma.Huecos.Insert(huecos.ToArray());
+                            huecos.Clear();
+                            batch = 0;
+                        }
                     }
 
-                    if (huecos.Any())
-                        _sisfarma.Huecos.Insert(huecos.ToArray());
-
+                    if (huecos.Any())                    
+                        _sisfarma.Huecos.Insert(huecos.ToArray());                    
+                        
                     hueco = cliente.Id;
                 }
                 hueco++;

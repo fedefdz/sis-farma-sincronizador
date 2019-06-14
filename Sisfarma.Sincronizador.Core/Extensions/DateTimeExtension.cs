@@ -17,7 +17,7 @@ namespace Sisfarma.Sincronizador.Core.Extensions
                 .ToIntegerOrDefault();
 
         public static int ToDateInteger(this DateTime? @this, string format = "yyyyMMdd")
-            => @this.HasValue ? @this.ToDateInteger(format) : 0;
+            => @this.HasValue ? @this.Value.ToDateInteger(format) : 0;
 
         public static int ToTimeInteger(this DateTime @this, string format = "HHmm")
             => @this.ToString(format)
