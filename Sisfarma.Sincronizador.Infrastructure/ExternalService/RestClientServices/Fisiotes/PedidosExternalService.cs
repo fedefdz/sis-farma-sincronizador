@@ -100,7 +100,7 @@ namespace Sisfarma.Sincronizador.Infrastructure.Fisiotes
                 idPedido = ll.idPedido,
                 idLinea = ll.idLinea,
                 cod_nacional = ll.cod_nacional,
-                descripcion = ll.descripcion,
+                descripcion = ll.descripcion.Strip(),
                 familia = ll.familia,
                 superFamilia = ll.superFamilia,
                 cantidad = ll.cantidad,

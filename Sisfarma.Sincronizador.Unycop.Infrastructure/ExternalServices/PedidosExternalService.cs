@@ -65,7 +65,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices
                 idPedido = ll.idPedido,
                 idLinea = ll.idLinea,
                 cod_nacional = ll.cod_nacional,
-                descripcion = ll.descripcion,
+                descripcion = ll.descripcion.Strip(),
                 familia = ll.familia,
                 categoria = ll.categoria,
                 subcategoria = ll.subcategoria,
