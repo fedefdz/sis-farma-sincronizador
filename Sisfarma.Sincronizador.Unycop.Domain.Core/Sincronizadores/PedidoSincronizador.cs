@@ -54,24 +54,17 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
             foreach (var group in groups)
             {
                 Task.Delay(5).Wait();
-                _cancellationToken.ThrowIfCancellationRequested();
-
-                try
-                {
-                    int.Parse($"{group.Key.Anio}{group.Key.Albaran}");
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($@"No se pudo parsear a int ""{group.Key.Anio}{group.Key.Albaran}""", ex);
-                }
+                _cancellationToken.ThrowIfCancellationRequested();                
 
                 var linea = 0;
                 var fecha = group.Value.First().Fecha; // a la vuelta preguntamos por > fecha
                 var proveedorPedido = group.Value.First().Proveedor.HasValue ? _farmacia.Proveedores.GetOneOrDefaultById(group.Value.First().Proveedor.Value) : null;
-                
+
+                var albaran = group.Key.Albaran > 0 ? group.Key.Albaran : 0;
+                var identity = int.Parse($"{group.Key.Anio}{albaran}");
                 var recepcion = new FAR.Recepcion
                 {
-                    Id = int.Parse($"{group.Key.Anio}{group.Key.Albaran}"),
+                    Id = identity,
                     Fecha = fecha.Value,                  
                     ImportePVP = group.Value.Sum(x => x.PVP * x.Recibido * _factorCentecimal),
                     ImportePUC = group.Value.Sum(x => x.PCTotal * _factorCentecimal),
@@ -88,7 +81,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                         var recepcionDetalle = new RecepcionDetalle()
                         {
                             Linea = ++linea,
-                            RecepcionId = int.Parse($"{group.Key.Anio}{group.Key.Albaran}"),
+                            RecepcionId = identity,
                             Cantidad = item.Recibido - item.Devuelto,
                             CantidadBonificada = item.Bonificado,
                             Recepcion = recepcion
