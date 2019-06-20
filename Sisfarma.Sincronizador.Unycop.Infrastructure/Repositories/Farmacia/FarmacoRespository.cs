@@ -242,7 +242,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 Stock = farmaco.Existencias ?? 0,
                 StockMinimo = farmaco.Stock ?? 0,
                 Laboratorio = laboratorio,
-                Baja = farmaco.FechaBaja.ToBoolean(),
+                Baja = farmaco.FechaBaja > 0,
                 FechaCaducidad = farmaco.FechaCaducidad.HasValue ? (DateTime?)$"{farmaco.FechaCaducidad.Value}".ToDateTimeOrDefault("yyyyMM") : null
             };
         }
