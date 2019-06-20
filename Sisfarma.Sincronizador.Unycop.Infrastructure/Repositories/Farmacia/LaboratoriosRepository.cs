@@ -9,7 +9,9 @@ using System.Linq;
 namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
 {
     public class LaboratorioRepository : FarmaciaRepository, ILaboratorioRepository
-    {        
+    {
+        protected const string LABORATORIO_DEFAULT = "<Sin Laboratorio>";
+
         public LaboratorioRepository(LocalConfig config) : base(config)
         { }
 
@@ -22,7 +24,8 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                 var sql = "SELECT ID_Laboratorio as Codigo, Nombre FROM Laboratorios WHERE ID_Laboratorio = @codigo";
                 return db.Database.SqlQuery<Laboratorio>(sql,
                     new OleDbParameter("codigo", codigo))
-                    .FirstOrDefault();
+                    .FirstOrDefault()
+                        ?? new Laboratorio { Codigo = codigo, Nombre = LABORATORIO_DEFAULT };
             }
         }        
     }
