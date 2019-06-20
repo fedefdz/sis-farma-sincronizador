@@ -38,6 +38,9 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia.DTO
 
         public int FechaBaja { get; set; }
 
+        /// <summary>
+        /// Fecha formato yyyyMM
+        /// </summary>
         public int? FechaCaducidad { get; set; }
     }
 }

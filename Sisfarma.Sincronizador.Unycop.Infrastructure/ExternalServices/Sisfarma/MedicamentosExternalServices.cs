@@ -98,7 +98,7 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.ExternalServices.Sisfarma
                     presentacion = mm.presentacion,
                     descripcionTienda = mm.descripcionTienda,
                     activoPrestashop = mm.activoPrestashop.ToInteger(),
-                    fechaCaducidad = mm.fechaCaducidad?.ToDateInteger("yyyyMMdd") ?? 0,
+                    fechaCaducidad = mm.fechaCaducidad?.ToDateInteger("yyyyMM") ?? 0,
                     fechaUltimaCompra = mm.fechaUltimaCompra.ToIsoString(),
                     fechaUltimaVenta = mm.fechaUltimaVenta.ToIsoString(),
                     baja = mm.baja.ToInteger()
