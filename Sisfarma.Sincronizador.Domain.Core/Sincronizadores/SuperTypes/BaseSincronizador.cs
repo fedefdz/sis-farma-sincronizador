@@ -13,24 +13,16 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
 {
     public abstract class BaseSincronizador : Sincronizador, ISincronizadorAsync
     {
-        protected ISisfarmaService _sisfarma;
-        protected string _pathLog = ConfigurationManager.AppSettings["Directory.Logs"];
+        protected ISisfarmaService _sisfarma;        
 
         public BaseSincronizador(ISisfarmaService sisfarma)
             => _sisfarma = sisfarma ?? throw new ArgumentNullException(nameof(sisfarma));
 
         public override async Task SincronizarAsync(CancellationToken cancellationToken = default(CancellationToken), int delayLoop = 200)
-        {
-            if (!Directory.Exists(_pathLog))            
-                Directory.CreateDirectory(_pathLog);
-                        
-            LogTimeMessage($"Init ...");
-            _cancellationToken = cancellationToken;
-            
-            LogTimeMessage("LoadConfiguration");
+        {                                                
+            _cancellationToken = cancellationToken;            
             LoadConfiguration();
-
-            LogTimeMessage("PreSincronizacion");
+            
             PreSincronizacion();
 
 
@@ -39,27 +31,22 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
                 try
                 {
                     _cancellationToken.ThrowIfCancellationRequested();
-
-                    LogTimeMessage("Process Init ...");
+                    
                     Process();
-                    LogTimeMessage("Process Finished.");
                 }
                 catch (OperationCanceledException ex)
-                {                   
-                    LogTimeMessage("Shutdown ...");
+                {                                       
                     throw ex;
                 }
                 catch (RestClientException ex)
                 {
                     var error = ex.ToLogErrorMessage();
-                    LogError(error);
-                    LogTimeMessage($"Process finializado con error | {error}");
+                    LogError(error);                    
                 }
                 catch (Exception ex)
                 {
                     var error = ex.ToLogErrorMessage();
-                    LogError(error);
-                    LogTimeMessage($"Process finializado con error | {error}");
+                    LogError(error);                    
                 }
                 finally
                 {
@@ -95,22 +82,6 @@ namespace Sisfarma.Sincronizador.Domain.Core.Sincronizadores.SuperTypes
                 // nothing
                 // El sincro se detiene si lanzamos una excepción en este punto.
             }
-        }
-
-        public void LogTimeMessage(string message)
-        {                        
-            var log = $"{ DateTime.Now.ToString("o")} | {GetType().Name} | {message}";
-
-            using (var writer = new StreamWriter(new FileStream(Path.Combine(_pathLog, $"{GetType().Name}.logs"), FileMode.Append)))
-            {                
-                writer.WriteLine(log);
-            }
-
-
-            //using (var wirter = new StreamWriter(new FileStream(Path.Combine(_pathLog, $"SincronizadorUnycop.logs"), FileMode.Append)))
-            //{
-            //    wirter.WriteLine(log);
-            //}
-        }
+        }        
     }
 }
