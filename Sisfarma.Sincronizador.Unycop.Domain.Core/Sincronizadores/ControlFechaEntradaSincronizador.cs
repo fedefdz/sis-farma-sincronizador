@@ -67,6 +67,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
                 descripcion = farmaco.Denominacion,
                 laboratorio = farmaco.Laboratorio?.Codigo ?? "0",
                 nombre_laboratorio = farmaco.Laboratorio?.Nombre ?? LABORATORIO_DEFAULT,
+                proveedor = farmaco.Proveedor?.Nombre ?? string.Empty,
                 pvpSinIva = (float)farmaco.PrecioSinIva(),
                 iva = (int)farmaco.Iva,
                 stock = farmaco.Stock,
