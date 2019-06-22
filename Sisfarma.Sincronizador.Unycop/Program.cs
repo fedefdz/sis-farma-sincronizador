@@ -36,6 +36,9 @@ namespace Sisfarma.Sincronizador.Unycop
 
             Initialize();
 
+            SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", $"{ApplicationDeployment.CurrentDeployment.CurrentVersion}");
+            //SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", "1.0");
+
             SincronizadorTaskManager.TaskSincronizadores
                 .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
                     farmacia: FarmaciaFactory.Create(),
