@@ -9,7 +9,7 @@
 
         public static string ProductName
         {
-            get { return "Sincronizador"; }
+            get { return "Sincronizador.Unycop"; }
         }
     }
 }
