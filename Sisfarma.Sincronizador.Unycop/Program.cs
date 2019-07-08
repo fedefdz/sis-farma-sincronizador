@@ -37,8 +37,8 @@ namespace Sisfarma.Sincronizador.Unycop
 
             Initialize();
 
-            SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", $"{ApplicationDeployment.CurrentDeployment.CurrentVersion}");
-            //SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", "1.0");
+            //SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", $"{ApplicationDeployment.CurrentDeployment.CurrentVersion}");
+            SisfarmaFactory.Create().Configuraciones.Update("versionSincronizador", "1.0");
 
             SincronizadorTaskManager.TaskSincronizadores
             .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteSincronizador(
@@ -95,15 +95,7 @@ namespace Sisfarma.Sincronizador.Unycop
                     fisiotes: SisfarmaFactory.Create())
                         .SetHorarioVaciamientos("1000", "1230", "1730", "1930"),
                     delay: SincronizadorTaskManager.DelaySinomimos)
-            .AddSincronizador(new Domain.Core.Sincronizadores.PuntoPendienteActualizacionSincronizador(
-                    farmacia: FarmaciaFactory.Create(),
-                    fisiotes: SisfarmaFactory.Create()),
-                    delay: SincronizadorTaskManager.DelayPuntosPendiente)
             .AddSincronizador(new Domain.Core.Sincronizadores.TicketPendienteActualizacionSincronizador(
-                    farmacia: FarmaciaFactory.Create(),
-                    fisiotes: SisfarmaFactory.Create()),
-                    delay: SincronizadorTaskManager.DelayVentaMensual)
-            .AddSincronizador(new Domain.Core.Sincronizadores.PagoPendienteActualizarSincronizador(
                     farmacia: FarmaciaFactory.Create(),
                     fisiotes: SisfarmaFactory.Create()),
                     delay: SincronizadorTaskManager.DelayVentaMensual)
@@ -153,8 +145,8 @@ namespace Sisfarma.Sincronizador.Unycop
         private static ContextMenuStrip GetSincronizadorMenuStrip()
         {
             var cms = new ContextMenuStrip();
-            cms.Items.Add($"Salir {ApplicationDeployment.CurrentDeployment.CurrentVersion}", null, (sender, @event) => Application.Exit());
-            //cms.Items.Add($"Salir", null, (sender, @event) => Application.Exit());
+            //cms.Items.Add($"Salir {ApplicationDeployment.CurrentDeployment.CurrentVersion}", null, (sender, @event) => Application.Exit());
+            cms.Items.Add($"Salir", null, (sender, @event) => Application.Exit());
             return cms;
         }
 
@@ -196,14 +188,14 @@ namespace Sisfarma.Sincronizador.Unycop
 
         private static LocalConfiguracion GetConnexionLocal(string server, string token)
         {
-            //return new LocalConfiguracion
-            //{
-            //    pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM-ACCESS\TEST",
-            //    //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
-            //    //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM",
-            //    password = "BIGOTES",
-            //    marketCodeList = -1
-            //};
+            return new LocalConfiguracion
+            {
+                pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM-ACCESS\TEST",
+                //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\DATOS UNYCOP\DATOS UNYCOP",
+                //pathFicheros = @"C:\Users\Federico\Documents\sisfarma\sincronizador\access\JM",
+                password = "BIGOTES",
+                marketCodeList = -1
+            };
 
             try
             {

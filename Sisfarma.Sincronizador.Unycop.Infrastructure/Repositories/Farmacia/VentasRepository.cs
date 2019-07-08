@@ -174,12 +174,11 @@ namespace Sisfarma.Sincronizador.Unycop.Infrastructure.Repositories.Farmacia
                     var year = fecha.Year;
                     var fechaInicial = fecha.Date.ToString("dd-MM-yyyy HH:mm:ss");
 
-                    var sql = $@"SELECT ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE id_venta >= @id AND year(fecha) = @year AND fecha >= #{fechaInicial}# ORDER BY id_venta ASC";
+                    var sql = $@"SELECT top 999 ID_VENTA as Id, Fecha, NPuesto as Puesto, Cliente, Vendedor, Descuento, Pago, Tipo, Importe FROM ventas WHERE id_venta >= @id AND year(fecha) = @year AND fecha >= #{fechaInicial}# ORDER BY id_venta ASC";
 
                     rs = db.Database.SqlQuery<DTO.Venta>(sql,
                         new OleDbParameter("id", (int)id),
-                        new OleDbParameter("year", year))
-                            .Take(10)
+                        new OleDbParameter("year", year))                            
                             .ToList();
                 }
             }

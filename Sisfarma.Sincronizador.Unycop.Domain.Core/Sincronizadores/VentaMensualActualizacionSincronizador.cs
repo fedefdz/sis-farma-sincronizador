@@ -26,8 +26,7 @@ namespace Sisfarma.Sincronizador.Unycop.Domain.Core.Sincronizadores
         { }
 
         public override void LoadConfiguration()
-        {
-            base.LoadConfiguration();
+        {            
             base.LoadConfiguration();
             _clasificacion = !string.IsNullOrWhiteSpace(ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION])
                 ? ConfiguracionPredefinida[Configuracion.FIELD_TIPO_CLASIFICACION]
